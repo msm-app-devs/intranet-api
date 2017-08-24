@@ -1,0 +1,1 @@
+<?phpnamespace Employees\Config;class DefaultParam{    const DefaultController = "users";    const DefaultAction = "login";}

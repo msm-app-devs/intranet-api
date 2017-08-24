@@ -1,0 +1,41 @@
+[28-Jun-2017 15:47:41 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_parse_message() in /home/cquests/public_html/tableau/webroot/testTicket.php:20
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(72): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 20
+[28-Jun-2017 15:48:02 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_parse_message() in /home/cquests/public_html/tableau/webroot/testTicket.php:20
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(72): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 20
+[28-Jun-2017 15:50:10 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_parse_message() in /home/cquests/public_html/tableau/webroot/testTicket.php:20
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(72): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 20
+[28-Jun-2017 15:53:59 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_post_fields() in /home/cquests/public_html/tableau/webroot/testTicket.php:21
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(73): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 21
+[28-Jun-2017 15:55:00 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_post_fields() in /home/cquests/public_html/tableau/webroot/testTicket.php:21
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(75): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 21
+[28-Jun-2017 15:58:04 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function http_post_data() in /home/cquests/public_html/tableau/webroot/testTicket.php:22
+Stack trace:
+#0 /home/cquests/public_html/tableau/webroot/testTicket.php(6): get_trusted_ticket('92.247.42.231', 'cquest-rc\\liliy...', '84.40.65.203')
+#1 /home/cquests/public_html/tableau/webroot/testTicket.php(75): get_trusted_url('cquest-rc\\liliy...', '92.247.42.231', 'views/Superstor...')
+#2 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 22
+[28-Jun-2017 16:32:23 CST6CDT] PHP Fatal error:  Uncaught Error: Class 'HttpRequest' not found in /home/cquests/public_html/tableau/webroot/testTicket.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/cquests/public_html/tableau/webroot/testTicket.php on line 67
+[28-Jun-2017 16:52:10 CST6CDT] PHP Parse error:  syntax error, unexpected 'exit' (T_EXIT) in /home/cquests/public_html/tableau/webroot/testTicket.php on line 84
