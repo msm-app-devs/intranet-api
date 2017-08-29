@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            $.ajax({
+                type: 'POST',
+                url: '../employees/updateemployee',
+                data: {
+                    id: 1,
+                    extId: 1,
+                    firstName: "Svetoslav",
+                    lastName: "Bozhinov",
+                    position: "Charter",
+                    team : "Charting",
+                    startDate : "05/05/2014",
+                    birthday: "12/10/1993"
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="div1">sdfsd</div>
+</body>
+</html>

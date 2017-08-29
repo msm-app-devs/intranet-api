@@ -22,7 +22,7 @@ class EmployeesController
 
     public function addemployee(EmpBindingModel $employeeBindingModel)
     {
-        if  ($this->employeeService->addEmp($employeeBindingModel)) {
+        if ($this->employeeService->addEmp($employeeBindingModel)) {
             print_r("true");
         } else {
             print_r("false");
@@ -35,8 +35,12 @@ class EmployeesController
 
     }
 
-    public function updateEmp(EmpBindingModel $empBindingModel) {
-
+    public function updateemployee(EmpBindingModel $empBindingModel) {
+        if ($this->employeeService->updEmp($empBindingModel)) {
+            print_r("true");
+        } else {
+            print_r("false");
+        }
     }
 
 }

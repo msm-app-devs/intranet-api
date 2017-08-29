@@ -45,6 +45,7 @@ class EmployeesService implements EmployeesServiceInterface
 
     public function getEmp($id) {
         $query = "SELECT 
+                  id,
                   ext_id AS extId,
                   first_name AS firstName,
                   last_name AS lastName,
@@ -87,6 +88,32 @@ class EmployeesService implements EmployeesServiceInterface
             $model->getBirthday()
         ]);
 
+    }
+
+    public function updEmp(EmpBindingModel $model)
+    {
+        $query = "UPDATE 
+                 employees 
+                 SET 
+                 first_name = ?,
+                 last_name = ?,
+                 position = ?,
+                 team = ?,
+                 start_date = ?,
+                 birthday = ? 
+                 WHERE id = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute([
+            $model->getFirstName(),
+            $model->getLastName(),
+            $model->getPosition(),
+            $model->getTeam(),
+            $model->getStartDate(),
+            $model->getBirthday(),
+            $model->getId()
+        ]);
     }
 
 
