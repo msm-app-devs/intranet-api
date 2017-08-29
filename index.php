@@ -4,6 +4,9 @@ use Employees\Adapter\Database;
 use Employees\Config\DbConfig;
 use Employees\Config\DefaultParam;
 
+//var_dump("TEST");
+//exit;
+
 session_start();
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);

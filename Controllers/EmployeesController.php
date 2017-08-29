@@ -16,21 +16,22 @@ class EmployeesController
 
     public function list()
     {
-        echo(json_encode($this->employeeService->getList()));
+        print_r(htmlspecialchars(json_encode($this->employeeService->getList())));
+//        print_r(htmlspecialchars("<script>window.alert('ZZZZZZZ')</script>"));
     }
 
     public function addemployee(EmpBindingModel $employeeBindingModel)
     {
         if  ($this->employeeService->addEmp($employeeBindingModel)) {
-            echo "true";
+            print_r("true");
         } else {
-            echo "false";
+            print_r("false");
         }
     }
 
     public function getemployee($id) {
 
-        echo json_encode($this->employeeService->getEmp($id));
+        print_r(json_encode($this->employeeService->getEmp($id)));
 
     }
 
