@@ -16,6 +16,11 @@ spl_autoload_register(function($class){
 
 });
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+header('Content-Type: text/html; charset=utf-8');
+
 $uri = $_SERVER['REQUEST_URI'];
 $self = $_SERVER['PHP_SELF'];
 $self = str_replace("index.php","",$self);

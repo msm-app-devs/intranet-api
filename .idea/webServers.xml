@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c20fdc46-b96e-4bed-a0c0-09e557cfad45" name="q1q1" url="http://ftp.q1q1.eu">
+        <fileTransfer host="ftp.q1q1.eu" port="21" rootFolder="/public_html/employees">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="92a91cba-5a1f-420c-996e-44e5e50ca481" name="ENEL" url="http://91.215.216.28">
+        <fileTransfer host="91.215.216.28" port="21" rootFolder="/public_html/ENEL2017">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
