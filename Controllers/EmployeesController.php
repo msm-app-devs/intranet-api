@@ -14,10 +14,15 @@ class EmployeesController
         $this->employeeService = $employeesService;
     }
 
-    public function list()
+    public function list($active = null)
     {
-        print_r(htmlspecialchars(json_encode($this->employeeService->getList())));
-//        print_r(htmlspecialchars("<script>window.alert('ZZZZZZZ')</script>"));
+        if ($active == null) {
+            print_r(json_encode(array("employee" => $this->employeeService->getList())));
+
+        } else {
+            print_r(json_encode(array("employee" => $this->employeeService->getListStatus($active))));
+        }
+
     }
 
     public function addemployee(EmpBindingModel $employeeBindingModel)

@@ -43,6 +43,28 @@ class EmployeesService implements EmployeesServiceInterface
         return $result;
     }
 
+    public function getListStatus($active)
+    {
+        $query = "SELECT 
+                  id, 
+                  ext_id AS extId,
+                  first_name AS firstName,
+                  last_name AS lastName,
+                  position,
+                  team,
+                  start_date AS dateStart,
+                  birthday 
+                  FROM employees 
+                  WHERE active = ?";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$active]);
+
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
     public function getEmp($id) {
         $query = "SELECT 
                   id,

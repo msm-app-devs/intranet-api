@@ -6,10 +6,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-                $.ajax({url: "http://q1q1.eu/employees/employees/list", success: function(result){
-                    $("#div1").html(result);
-                    console.log(jQuery.parseJSON(result));
-                }});
+                $.ajax({
+//                    url: "../employees/list/yes",
+                    url: "http://q1q1.eu/employees/employees/list",
+                    type: 'GET',
+//                    headers: {"X-My-Custom-Header": "some value"}
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('Authorization', 'Basic guest:guest123');
+                    },
+                    withCredentials: true
+
+                }).done(function(data){
+                    $("#div1").text(data);
+                    console.log(jQuery.parseJSON(data));
+                });
+
+//                $.ajax({url: "../employees/list", success: function(result){
+//                    $("#div1").text(result);
+//                    console.log(jQuery.parseJSON(result));
+//                }});
 
 //            $.ajax({url: "../employees/getemployee/1", success: function(result){
 //                $("#div1").html(result);
@@ -19,6 +34,6 @@
     </script>
 </head>
 <body>
-<div id="div1">sdfsd</div>
+<div id="div1"></div>
 </body>
 </html>
