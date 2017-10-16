@@ -11,13 +11,15 @@
                 type: 'POST',
                 url: '../employees/addemployee',
                 data: {
-                    extId: 10,
+                    id : 1,
+                    extId: 1,
                     firstName: "Svetoslav",
                     lastName: "Bozhinov",
                     position: "Charter",
                     team : "Charting",
                     startDate : "05/05/2014",
-                    birthday: "12/10/1993"
+                    birthday: "12/10/1993",
+                    active: "yes"
                 },
                 success: function(response) {
                     console.log(response);

@@ -138,5 +138,18 @@ class EmployeesService implements EmployeesServiceInterface
         ]);
     }
 
+    public function removeEmp($empId) : bool {
+
+        $query = "UPDATE 
+                  employees 
+                  SET 
+                  active = ?  
+                  WHERE id = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute(["no",$empId]);
+    }
+
 
 }

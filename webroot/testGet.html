@@ -7,14 +7,14 @@
     <script>
         $(document).ready(function(){
                 $.ajax({
-//                    url: "../employees/list/yes",
-                    url: "http://q1q1.eu/employees/employees/list",
-                    type: 'GET',
+                    url: "../employees",
+//                    url: "http://q1q1.eu/employees/employees/list",
+                    type: 'GET'
 //                    headers: {"X-My-Custom-Header": "some value"}
-                    beforeSend: function(xhr){
-                        xhr.setRequestHeader('Authorization', 'Basic guest:guest123');
-                    },
-                    withCredentials: true
+//                    beforeSend: function(xhr){
+//                        xhr.setRequestHeader('Authorization', 'Basic guest:guest123');
+//                    },
+//                    withCredentials: true
 
                 }).done(function(data){
                     $("#div1").text(data);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+
+//             type: 'POST',
+//                url: 'http://q1q1.eu/employees/employees/addemployee',
+                url: "../employees/testwithfilter",
+                type: 'POST',
+                data: {
+                    extId: 4,
+                    firstName: "Zlatan",
+                    lastName: "Ibrahimovich",
+                    position: "Business analytics",
+                    team : "Business",
+                    startDate : "07/09/2016",
+                    birthday: "12/11/1987"
+                },
+                success: function(response) {
+                    console.log(response);
+                    $("#div1").html(response);
+                }
+                });
+
+        });
+    </script>
+</head>
+<body>
+<div id="div1"></div>
+</body>
+</html>

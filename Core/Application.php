@@ -50,6 +50,7 @@ class Application
         $actionName = $this->mvcContext->getAction();
         $args = $this->mvcContext->getArguments();
 
+
     //DA GO RAZGLEDAM DOPYLNITELNO ZA DA SI IZQSNQ KAK STAVAT NESHTATA TUK
         $refMethod = new \ReflectionMethod($controllerFullQualifiedName,$actionName);
         $parameters = $refMethod->getParameters();
@@ -62,7 +63,10 @@ class Application
                 $className = $parameterClass->getName();
 
                 if (!$parameterClass->isInterface()) {
+
+
                     $instance = $this->mapForm($_POST, $parameterClass);
+
                 } else {
                     $instance = $this->resolve($this->dependencies[$className]);
                 }
@@ -73,6 +77,8 @@ class Application
      ////////////////////////////////////////////////////////////////////
 
         if (class_exists($controllerFullQualifiedName)) {
+
+
             $controller = $this->resolve($controllerFullQualifiedName);
             call_user_func_array(
                 [

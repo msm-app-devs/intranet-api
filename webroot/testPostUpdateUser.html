@@ -8,18 +8,24 @@
         $(document).ready(function(){
 
             $.ajax({
-                type: 'POST',
-                url: 'http://q1q1.eu/employees/employees/updateemployee',
+                type: 'PUT',
+//                url: 'http://q1q1.eu/employees/employees/updateemployee',
+                url: '../employees',
+//                data :  JSON.stringify({"newWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":"4","SaturdayHours":0,"SundayHours":0},"oldWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":2,"SaturdayHours":0,"SundayHours":0}}),
                 data: {
                     id: 1,
-                    extId: 1,
-                    firstName: "Grigor",
-                    lastName: "Dimitrov",
-                    position: "DP",
-                    team : "Future thinking",
-                    startDate : "05/05/2014",
-                    birthday: "12/10/1993"
+//                    extId: 1,
+//                    firstName: "Grigor",
+//                    lastName: "Dimitrov",
+                    position: "Scripting",
+//                    team : "Future thinking",
+//                    startDate : "05/05/2014",
+//                    birthday: "12/10/1993",
+                    active: "yes"
                 },
+//                headers: {"X-HTTP-Method-Override": "PUT"},
+//                dataType: 'json',
+                //contentType: "application/json",
                 success: function(response) {
                     console.log(response);
                 }

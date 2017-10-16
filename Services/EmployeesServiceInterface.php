@@ -23,4 +23,6 @@ interface EmployeesServiceInterface
     public function getEmp($id);
 
     public function updEmp(EmpBindingModel $model);
+
+    public function removeEmp($empId) : bool;
 }
