@@ -115,6 +115,7 @@ class EmployeesService implements EmployeesServiceInterface
                   team,
                   start_date,
                   birthday,
+                  active,
                   unique_str_code
                   )
                   VALUES(?,?,?,?,?,?,?,?)";
@@ -129,6 +130,7 @@ class EmployeesService implements EmployeesServiceInterface
             $model->getTeam(),
             $model->getStartDate(),
             $model->getBirthday(),
+            $model->getActive(),
             $uniqueStrId
         ]);
 
