@@ -84,7 +84,27 @@ class EmployeesService implements EmployeesServiceInterface
         return $result;
     }
 
-    public function addEmp(EmpBindingModel $model)
+    public function getEmpByStrId($strId) {
+        $query = "SELECT 
+                  id,
+                  ext_id AS extId,
+                  first_name AS firstName,
+                  last_name AS lastName,
+                  position,
+                  team,
+                  start_date AS dateStart,
+                  birthday 
+                  FROM employees WHERE unique_str_code = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->execute([$strId]);
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
+    public function addEmp(EmpBindingModel $model, $uniqueStrId)
     {
         $query = "INSERT INTO
                   employees (
@@ -94,9 +114,10 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date,
-                  birthday
+                  birthday,
+                  unique_str_code
                   )
-                  VALUES(?,?,?,?,?,?,?)";
+                  VALUES(?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -107,35 +128,43 @@ class EmployeesService implements EmployeesServiceInterface
             $model->getPosition(),
             $model->getTeam(),
             $model->getStartDate(),
-            $model->getBirthday()
+            $model->getBirthday(),
+            $uniqueStrId
         ]);
 
     }
 
-    public function updEmp(EmpBindingModel $model)
+//    public function updEmp(EmpBindingModel $model)
+    public function updEmp($columns, $values)
     {
-        $query = "UPDATE 
-                 employees 
-                 SET 
-                 first_name = ?,
-                 last_name = ?,
-                 position = ?,
-                 team = ?,
-                 start_date = ?,
-                 birthday = ? 
-                 WHERE id = ?";
+
+        $query = "UPDATE employees SET ".$columns;
 
         $stmt = $this->db->prepare($query);
-
-        return $stmt->execute([
-            $model->getFirstName(),
-            $model->getLastName(),
-            $model->getPosition(),
-            $model->getTeam(),
-            $model->getStartDate(),
-            $model->getBirthday(),
-            $model->getId()
-        ]);
+        return $stmt->execute($values);
+//                $query = "UPDATE
+//                 employees
+//                 SET
+//                 first_name = ?,
+//                 last_name = ?,
+//                 position = ?,
+//                 team = ?,
+//                 start_date = ?,
+//                 birthday = ?
+//                 WHERE id = ?";
+//
+//        $stmt = $this->db->prepare($query);
+//        return $stmt->execute(
+//            [
+////            $model->getFirstName(),
+//            $model->getLastName(),
+//            $model->getPosition(),
+//            $model->getTeam(),
+//            $model->getStartDate(),
+//            $model->getBirthday(),
+//            $model->getId()
+//        ]
+//        );
     }
 
     public function removeEmp($empId) : bool {

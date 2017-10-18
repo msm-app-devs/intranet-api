@@ -20,6 +20,7 @@ class EmpBindingModel
     private $team;
     private $startDate;
     private $birthday;
+    private $active;
 
     /**
      * @return mixed
@@ -148,6 +149,22 @@ class EmpBindingModel
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $isActive
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
 

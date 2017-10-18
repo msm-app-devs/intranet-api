@@ -17,6 +17,10 @@ class DatabaseStatement implements DatabaseStatementInterface
         return $this->stmt->execute($args);
     }
 
+    public function bindValue($param, $value, $type) : bool {
+        return $this->stmt->bindValue($param, $value, $type);
+    }
+
     public function fetch()
     {
         return $this->stmt->fetch(\PDO::FETCH_ASSOC);

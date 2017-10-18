@@ -18,11 +18,14 @@ interface EmployeesServiceInterface
 
     public  function getListStatus($active);
 
-    public function addEmp(EmpBindingModel $model);
+    public function addEmp(EmpBindingModel $model, $uniqueStrId);
+
+    public function getEmpByStrId($strId);
 
     public function getEmp($id);
 
-    public function updEmp(EmpBindingModel $model);
+//    public function updEmp(EmpBindingModel $model);
+    public function updEmp($columns, $values);
 
     public function removeEmp($empId) : bool;
 }

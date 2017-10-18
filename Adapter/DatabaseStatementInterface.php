@@ -5,6 +5,8 @@ interface DatabaseStatementInterface
 {
     public function execute(array $args = []) : bool;
 
+    public function bindValue($param, $value, $type) : bool ;
+
     public function fetch();
 
     public function fetchAll();

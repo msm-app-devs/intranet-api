@@ -4,14 +4,23 @@ namespace Employees\Controllers;
 
 
 use Employees\Models\Binding\Emp\EmpBindingModel;
+use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
+use Employees\Services\EncryptionServiceInterface;
+use Employees\Services\CreatingQuerySevice;
 
 class EmployeesController
 {
 
-    public function __construct(EmployeesServiceInterface $employeesService)
+    private $employeeService;
+    private $encryptionService;
+    private $createQuery;
+
+    public function __construct(EmployeesServiceInterface $employeesService, EncryptionServiceInterface $encryptionService, CreatingQueryServiceInterface $createQuery)
     {
         $this->employeeService = $employeesService;
+        $this->encryptionService = $encryptionService;
+        $this->createQuery = $createQuery;
     }
 
     public function list($active = null)
@@ -42,9 +51,13 @@ class EmployeesController
     public function addemployee(EmpBindingModel $employeeBindingModel)
     {
 
-        if ($this->employeeService->addEmp($employeeBindingModel)) {
+        $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName().
+            $employeeBindingModel->getLastName().
+            $employeeBindingModel->getBirthday());
+
+        if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
 //            print_r($employeeBindingModel->getPosition());
-            print_r("true");
+            print_r(json_encode(array("employee" => $this->employeeService->getEmpByStrId($md5string))));
         } else {
             print_r("false");
         }
@@ -57,7 +70,12 @@ class EmployeesController
     }
 
     public function updateemployee(EmpBindingModel $empBindingModel) {
-        if ($this->employeeService->updEmp($empBindingModel)) {
+
+
+        $this->createQuery->setQueryUpdateEmp($empBindingModel);
+
+//        if ($this->employeeService->updEmp($empBindingModel)) {
+        if ($this->employeeService->updEmp($this->createQuery->getQuery(), $this->createQuery->getValues())) {
             print_r(json_encode(array("employee" => $this->employeeService->getEmp($empBindingModel->getId()))));
         } else {
             print_r("false");

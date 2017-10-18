@@ -12,4 +12,8 @@ class BCryptEncryptionService implements EncryptionServiceInterface
         return password_verify($password, $hash);
     }
 
+    public function md5generator($string) : string {
+        return md5($string);
+    }
+
 }

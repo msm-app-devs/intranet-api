@@ -22,15 +22,6 @@ spl_autoload_register(function($class){
 
 });
 
-//var_dump(parse_str(file_get_contents("php://input")));
-//var_dump($_GET["data"]);
-//$arr = [];
-//$putdata = fopen("php://input", "r");
-//parse_str(file_get_contents("php://input"), $arr);
-//$_POST = $arr;
-
-//var_dump($_POST);
-
 
 $uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -57,10 +48,10 @@ $dbInstanceName = 'default';
 //var_dump($args);
 //exit;
 
-if ($controllerName == NULL || $actionName == NULL) {
-    $controllerName = DefaultParam::DefaultController;
-    $actionName = DefaultParam::DefaultAction;
-}
+//if ($controllerName == NULL || $actionName == NULL) {
+//    $controllerName = DefaultParam::DefaultController;
+//    $actionName = DefaultParam::DefaultAction;
+//}
 
 // $uri = substr($uri, 1);
 
@@ -132,6 +123,9 @@ $app->registerDependency(
     \Employees\Services\ResponseServiceInterface::class,
     \Employees\Services\ResponseService::class
 );
+
+$app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::class,
+    \Employees\Services\CreatingQuerySevice::class);
 
 //$app->registerDependency(
 //    \SoftUni\Services\CategoryServiceInterface::class,

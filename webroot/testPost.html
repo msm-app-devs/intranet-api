@@ -8,20 +8,20 @@
         $(document).ready(function(){
 
             $.ajax({
-//                type: 'POST',
-                type: 'DELETE',
+                type: 'POST',
+//                type: 'DELETE',
 //                url: 'http://q1q1.eu/employees/employees/addemployee',
-                url: '../employees/1',
-//                data: {
-//                    extId: 5,
-//                    firstName: "Rafael",
-//                    lastName: "Nadal",
-//                    position: "Business analytics",
-//                    team : "Business",
-//                    startDate : "07/09/2016",
-//                    birthday: "12/11/1987",
-//                    active: "yes"
-//                },
+                url: '../employees',
+                data: {
+                    extId: 10,
+                    firstName: "Silvester",
+                    lastName: "Staloun",
+                    position: "DP",
+                    team : "System one",
+                    startDate : "10/08/2015",
+                    birthday: "12/05/1988",
+                    active: "yes"
+                },
                 success: function(response) {
                     console.log(response);
                     $("#div1").html(response);
@@ -31,6 +31,6 @@
     </script>
 </head>
 <body>
-<div id="div1">sdfsd</div>
+<div id="div1"></div>
 </body>
 </html>
