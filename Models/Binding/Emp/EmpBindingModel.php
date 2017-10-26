@@ -20,7 +20,7 @@ class EmpBindingModel
     private $team;
     private $startDate;
     private $birthday;
-    private $active;
+    private $active = "yes";
 
     /**
      * @return mixed
@@ -160,9 +160,9 @@ class EmpBindingModel
     }
 
     /**
-     * @param mixed $isActive
+     * @param mixed $active
      */
-    public function setActive($active)
+    public function setActive($active = "yes")
     {
         $this->active = $active;
     }

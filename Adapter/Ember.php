@@ -11,7 +11,7 @@ namespace Employees\Adapter;
 
 class Ember
 {
-    private $methods = ["GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee"];
+    private $methods = ["GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"];
 
     private $theMethod;
 
@@ -19,15 +19,18 @@ class Ember
 
     public function __construct($method)
     {
-        $this->theMethod = $method;
-        if ($method === "PUT") {
-            parse_str(file_get_contents("php://input"), $this->phpInput);
-            $_POST = $this->phpInput;
-        }
+            $this->theMethod = $method;
+//            parse_str(file_get_contents("php://input"), $this->phpInput);
+            if ($this->theMethod === "PUT" || $this->theMethod === "POST") {
+                $this->phpInput = json_decode(file_get_contents("php://input"),true);
+                $_POST = $this->phpInput['employee'];
+            }
+
     }
 
     public function getMethod() {
 
         return $this->methods[$this->theMethod];
+
     }
 }

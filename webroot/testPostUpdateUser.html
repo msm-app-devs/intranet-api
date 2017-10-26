@@ -9,15 +9,15 @@
 
             $.ajax({
                 type: 'PUT',
-//                url: 'http://q1q1.eu/employees/employees/updateemployee',
-                url: '../employees',
+//                url: 'http://q1q1.eu/employees/employees/10',
+                url: '../employees/1',
 //                data :  JSON.stringify({"newWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":"4","SaturdayHours":0,"SundayHours":0},"oldWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":2,"SaturdayHours":0,"SundayHours":0}}),
-                data: {
+                data : {
                     id: 1,
                     extId: 1,
-//                    firstName: "Grigor",
-//                    lastName: "Dimitrov",
-//                    position: "Scripting",
+                    firstName: "Grigor",
+                    lastName: "Dimitrov",
+                    position: "Scripting",
                     team : "System one",
                     startDate : "05/05/2014",
                     birthday: "12/10/1993",

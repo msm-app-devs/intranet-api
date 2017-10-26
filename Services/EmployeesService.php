@@ -79,7 +79,7 @@ class EmployeesService implements EmployeesServiceInterface
 
         $stmt = $this->db->prepare($query);
         $stmt->execute([$id]);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetch();
 
         return $result;
     }
@@ -99,16 +99,15 @@ class EmployeesService implements EmployeesServiceInterface
         $stmt = $this->db->prepare($query);
 
         $stmt->execute([$strId]);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetch();
 
         return $result;
     }
 
     public function addEmp(EmpBindingModel $model, $uniqueStrId)
     {
-        $query = "INSERT INTO
+        $query = "INSERT INTO 
                   employees (
-                  ext_id,
                   first_name,
                   last_name,
                   position,
@@ -118,12 +117,11 @@ class EmployeesService implements EmployeesServiceInterface
                   active,
                   unique_str_code
                   )
-                  VALUES(?,?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
         return $stmt->execute([
-            $model->getExtId(),
             $model->getFirstName(),
             $model->getLastName(),
             $model->getPosition(),

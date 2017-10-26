@@ -23,11 +23,16 @@ class EmployeesController
         $this->createQuery = $createQuery;
     }
 
+    public function option()
+    {
+
+    }
+
     public function list($active = null)
     {
         if ($active == null) {
 
-            print_r(json_encode(array("employee" => $this->employeeService->getList())));
+            print_r(json_encode(array("employee" => $this->employeeService->getListStatus("yes"))));
 
         } else {
 
@@ -51,13 +56,22 @@ class EmployeesController
     public function addemployee(EmpBindingModel $employeeBindingModel)
     {
 
+//        var_dump("TEST");
+//        exit;
         $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName().
             $employeeBindingModel->getLastName().
             $employeeBindingModel->getBirthday());
 
+//        var_dump($this->employeeService->getEmpByStrId("7702b7559a2ac1acf907eab6d2f091d5"));
+//        $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2");
+//        var_dump(json_encode($this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"), JSON_FORCE_OBJECT));
+//        print_r(json_encode(array("employees" => $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"))));
+//        exit;
+
+
         if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
 //            print_r($employeeBindingModel->getPosition());
-            print_r(json_encode(array("employee" => $this->employeeService->getEmpByStrId($md5string))));
+            print_r(json_encode(array("employees" =>$this->employeeService->getEmpByStrId($md5string))));
         } else {
             print_r("false");
         }
@@ -69,14 +83,15 @@ class EmployeesController
 
     }
 
-    public function updateemployee(EmpBindingModel $empBindingModel) {
+    public function updateemployee($theid,EmpBindingModel $empBindingModel) {
 
+        $empBindingModel->setId($theid);
 
         $this->createQuery->setQueryUpdateEmp($empBindingModel);
 
 //        if ($this->employeeService->updEmp($empBindingModel)) {
         if ($this->employeeService->updEmp($this->createQuery->getQuery(), $this->createQuery->getValues())) {
-            print_r(json_encode(array("employee" => $this->employeeService->getEmp($empBindingModel->getId()))));
+            print_r(json_encode(array("employees" => $this->employeeService->getEmp($empBindingModel->getId()))));
         } else {
             print_r("false");
         }

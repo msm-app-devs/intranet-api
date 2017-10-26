@@ -11,7 +11,9 @@ use Employees\Adapter\Ember;
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
-header('Content-Type: text/html; charset=utf-8');
+//header('Content-Type: text/html; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
+
 
 session_start();
 spl_autoload_register(function($class){
@@ -22,6 +24,14 @@ spl_autoload_register(function($class){
 
 });
 
+//$arr = [];
+//
+//parse_str(file_get_contents("php://input"), $arr);
+//var_dump($arr);
+//var_dump(file_get_contents("php://input"));
+//exit;
+//var_dump(json_decode(file_get_contents("php://input"),true));
+//exit;
 
 $uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -45,7 +55,8 @@ $actionName = $theMethod->getMethod();
 //$actionName = array_shift($args);
 $dbInstanceName = 'default';
 
-//var_dump($args);
+
+//var_dump($_POST);
 //exit;
 
 //if ($controllerName == NULL || $actionName == NULL) {
