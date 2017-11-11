@@ -94,11 +94,11 @@ class EmployeesService implements EmployeesServiceInterface
                   team,
                   start_date AS dateStart,
                   birthday 
-                  FROM employees WHERE unique_str_code = ?";
+                  FROM employees WHERE unique_str_code = ? AND active = ?";
 
         $stmt = $this->db->prepare($query);
 
-        $stmt->execute([$strId]);
+        $stmt->execute([$strId, "yes"]);
         $result = $stmt->fetch();
 
         return $result;
