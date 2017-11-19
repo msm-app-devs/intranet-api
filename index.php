@@ -4,24 +4,41 @@ use Employees\Adapter\Database;
 use Employees\Config\DbConfig;
 use Employees\Config\DefaultParam;
 use Employees\Adapter\Ember;
+use Employees\Core\MVC\KeyHolder;
 
 //var_dump("TEST");
 //exit;
 
+//var_dump("TEST");
+//exit;
+
+
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+//header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin');
+header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
+//header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin, X-Auth-Token, authorization');
+//header('X-Auth-Token: test1123');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
+//header('Authorization: testtesttestttt');
+
+//
 
 
-session_start();
+//var_dump($_SERVER["authorization"]);
+
+//exit;
+//var_dump(headers_list());
+
+//session_start();
+
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
     $class = str_replace("\\",DIRECTORY_SEPARATOR, $class);
     //var_dump($class);
     require_once $class . '.php';
-
 });
 
 //$arr = [];
@@ -33,15 +50,19 @@ spl_autoload_register(function($class){
 //var_dump(json_decode(file_get_contents("php://input"),true));
 //exit;
 
-$uri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER["REQUEST_METHOD"];
+
+$uri = $_SERVER['REQUEST_URI']; // URI
+$requestMethod = $_SERVER["REQUEST_METHOD"]; //requested method
 $self = $_SERVER['PHP_SELF'];
+
 $arguments = [];
-$theMethod = new Ember($requestMethod);
+
 
 
 $self = str_replace("index.php","",$self);
+
 $uri = str_replace($self, '', $uri);
+
 // $uri = substr($uri, 1);
 
 //var_dump("$uri");
@@ -49,15 +70,42 @@ $uri = str_replace($self, '', $uri);
 
 $args = explode("/",$uri);
 
-$controllerName = array_shift($args);
+$theMethod = new Ember(array_shift($args), $requestMethod);
+
+$controllerName = $theMethod->getController();
 count($args) > 0 ? array_push($arguments,array_shift($args)) : $arguments ;
 $actionName = $theMethod->getMethod();
 //$actionName = array_shift($args);
 $dbInstanceName = 'default';
+$headers = [];
+$keyHolds = "";
+
+if ($requestMethod != "OPTIONS") {
+
+    $headers = getallheaders();
+
+    if (array_key_exists("Authorization", $headers)) {
+        $keyHolds = $headers["Authorization"];
+    }
+
+//    if($controllerName == "admin" && ) {
+//
+//
+//                http_response_code(404) ;
+//                exit;
+//            } else if ($controllerName == "admin" && $actionName == "token"){
+//
+//
+//                if (false) {
+//
+//                    exit;
+//                }
+//
+//
+//            }
+}
 
 
-//var_dump($_POST);
-//exit;
 
 //if ($controllerName == NULL || $actionName == NULL) {
 //    $controllerName = DefaultParam::DefaultController;
@@ -77,6 +125,8 @@ Database::setInstance(
     $dbInstanceName
 );
 
+
+
 $mvcContext = new \Employees\Core\MVC\MVCContext(
     $controllerName,
     $actionName,
@@ -88,6 +138,7 @@ $mvcContext = new \Employees\Core\MVC\MVCContext(
 //var_dump($arguments);
 //exit;
 
+
 $app = new \Employees\Core\Application($mvcContext);
 
 
@@ -98,8 +149,11 @@ $app->addClass(
 
 $app->addClass(
     \Employees\Core\MVC\SessionInterface::class,
-    new \Employees\Core\MVC\Session($_SESSION)
+        new \Employees\Core\MVC\Session($_SESSION)
 );
+
+    $app->addClass(\Employees\Core\MVC\KeyHolderInterface::class,
+        new \Employees\Core\MVC\KeyHolder($keyHolds));
 
 $app->addClass(
  \Employees\Adapter\DatabaseInterface::class,
@@ -137,6 +191,7 @@ $app->registerDependency(
 
 $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::class,
     \Employees\Services\CreatingQuerySevice::class);
+
 
 //$app->registerDependency(
 //    \SoftUni\Services\CategoryServiceInterface::class,

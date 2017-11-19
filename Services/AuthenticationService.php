@@ -2,15 +2,22 @@
 
 namespace Employees\Services;
 
+use Employees\Adapter\DatabaseInterface;
+use Employees\Core\MVC\KeyHolderInterface;
 use Employees\Core\MVC\SessionInterface;
+
 
 class AuthenticationService implements AuthenticationServiceInterface
 {
     private $session;
+    private $holder;
+    private $db;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, KeyHolderInterface $holder, DatabaseInterface $db)
     {
         $this->session = $session;
+        $this->holder = $holder;
+        $this->db = $db;
     }
 
     public function isAuthenticated() : bool
@@ -27,6 +34,37 @@ class AuthenticationService implements AuthenticationServiceInterface
     {
         return $this->session->get('id');
     }
+
+    private function isExpired($expireTime) {
+
+        $now = time();
+
+        if ($expireTime < $now) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function isTokenCorrect() : bool {
+
+        $query = "SELECT * FROM admin_tokens WHERE token = ?";
+
+        $stmt = $this->db->prepare($query);
+
+       $stmt->execute([substr($this->holder->getTokenKey(),7)]);
+
+       $result = $stmt->fetch();
+
+
+       if (array_key_exists('expire',$result)) {
+           return $this->isExpired($result['expire']);
+       } else {
+           return false;
+       }
+
+    }
+
 
 
 }

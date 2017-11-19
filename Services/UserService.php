@@ -32,17 +32,19 @@ class UserService implements UserServiceInterface
     public function login($username, $password) : bool
     {
 
-        $query = "SELECT
+        $query = "SELECT 
                         id,
-                        email,
+                        login,
                         password
                   FROM 
-                      users
+                      admins
                   WHERE
-                      email =  ?";
+                      login =  ? AND password = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$username]);
+        $stmt->execute([$username, $password]);
+
         /** @var User $user */
+
         $user = $stmt->fetchObject(User::class);
 
 
@@ -51,15 +53,16 @@ class UserService implements UserServiceInterface
             return false;
         }
         else {
-            $hash = $user->getPassword();
-
-            if ($this->encryptionService->verify($password, $hash)) {
-                $this->session->set('id',$user->getId());
-                return true;
-            } else {
-
-                return false;
-            }
+            return true;
+//            $hash = $user->getPassword();
+//
+//            if ($this->encryptionService->verify($password, $hash)) {
+//                $this->session->set('id',$user->getId());
+//                return true;
+//            } else {
+//
+//                return false;
+//            }
         }
 
 
@@ -109,5 +112,18 @@ class UserService implements UserServiceInterface
             $model->getEmail(),
             $model->getId()
         ]);
+    }
+
+    public function userToken($userId, $token) : bool
+    {
+        $query = "UPDATE admin_tokens SET token = ?, created = ?, expire = ? WHERE admin_id = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        $created = time();
+        $expire = time() + (30*60);
+
+        return $stmt->execute([$token, $created, $expire, $userId]);
+
     }
 }

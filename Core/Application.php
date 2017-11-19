@@ -64,7 +64,6 @@ class Application
 
                 if (!$parameterClass->isInterface()) {
 
-
                     $instance = $this->mapForm($_POST, $parameterClass);
 
                 } else {
@@ -77,7 +76,6 @@ class Application
      ////////////////////////////////////////////////////////////////////
 
         if (class_exists($controllerFullQualifiedName)) {
-
 
             $controller = $this->resolve($controllerFullQualifiedName);
             call_user_func_array(

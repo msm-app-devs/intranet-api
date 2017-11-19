@@ -9,4 +9,6 @@ interface AuthenticationServiceInterface
     public function logout();
 
     public function getUserId();
+
+    public function isTokenCorrect() : bool;
 }

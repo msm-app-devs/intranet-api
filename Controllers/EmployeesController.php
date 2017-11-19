@@ -3,7 +3,9 @@
 namespace Employees\Controllers;
 
 
+use Employees\Core\MVC\KeyHolder;
 use Employees\Models\Binding\Emp\EmpBindingModel;
+use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
@@ -15,12 +17,17 @@ class EmployeesController
     private $employeeService;
     private $encryptionService;
     private $createQuery;
+    private $authenticationService;
 
-    public function __construct(EmployeesServiceInterface $employeesService, EncryptionServiceInterface $encryptionService, CreatingQueryServiceInterface $createQuery)
+    public function __construct(EmployeesServiceInterface $employeesService,
+                                EncryptionServiceInterface $encryptionService,
+                                CreatingQueryServiceInterface $createQuery,
+                                AuthenticationServiceInterface $authenticationService)
     {
         $this->employeeService = $employeesService;
         $this->encryptionService = $encryptionService;
         $this->createQuery = $createQuery;
+        $this->authenticationService = $authenticationService;
     }
 
     public function option()
@@ -30,13 +37,18 @@ class EmployeesController
 
     public function list($active = null)
     {
-        if ($active == null) {
 
-            print_r(json_encode(array("employee" => $this->employeeService->getListStatus("yes"))));
+        if ($this->authenticationService->isTokenCorrect()) {
 
-        } else {
+            if ($active == null) {
 
-            print_r(json_encode(array("employee" => $this->employeeService->getListStatus($active))));
+                print_r(json_encode(array("employee" => $this->employeeService->getListStatus("yes"))));
+
+            } else {
+
+                print_r(json_encode(array("employee" => $this->employeeService->getEmp($active))));
+
+            }
 
         }
 

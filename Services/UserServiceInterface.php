@@ -13,4 +13,6 @@ interface UserServiceInterface
     public function findOne($id) : User;
 
     public function edit(UserProfileEditBindingModel $model) : bool;
+
+    public function userToken($userId, $token) : bool;
 }

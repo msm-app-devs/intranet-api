@@ -4,7 +4,7 @@ namespace Employees\Models\DB;
 class User
 {
     private $id;
-    private $email;
+    private $username;
     private $password;
 
 
@@ -27,17 +27,17 @@ class User
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->email;
+        return $this->username;
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $username
      */
-    public function setEmail($email)
+    public function setUsername($username)
     {
-        $this->email = $email;
+        $this->username = $username;
     }
 
     /**
