@@ -18,6 +18,14 @@
           <option name="port" value="21" />
         </fileTransfer>
       </webServer>
+      <webServer id="84aa7928-bc67-41a3-a38d-f15be3ad4839" name="tableau" url="http://cquest-share.com/hostcp">
+        <fileTransfer host="91.215.216.28" port="21" rootFolder="/public_html/tableau">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

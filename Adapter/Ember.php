@@ -11,7 +11,11 @@ namespace Employees\Adapter;
 
 class Ember
 {
-    private static $methods = ["GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"];
+    private static $methods = ["employees" =>
+                                array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
+                               "news" =>
+                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"removenews", "OPTION" => "option")
+                                ];
 
     private $theController;
 
@@ -36,8 +40,6 @@ class Ember
             }
         }
 
-
-
     }
 
     private function customCheck() {
@@ -58,7 +60,7 @@ class Ember
         if ($this->theMethod == "token") {
             return "token";
         } else {
-            return self::$methods[$this->theMethod];
+            return self::$methods[$this->theController][$this->theMethod];
         }
 
     }

@@ -37,6 +37,7 @@ class AdminController
             $username = $bindingModel->getUsername();
             $password = $bindingModel->getPassword();
 
+
             $admin = $this->userService->login($username, $password);
 
             if ($admin != null) {
@@ -49,8 +50,6 @@ class AdminController
 
                 }
 
-
-
             } else {
                 print_r(json_encode(array("access_token" => "")));
             }
@@ -58,10 +57,6 @@ class AdminController
 
 
         //throw new \Exception();
-     }
-
-     public function addNews() {
-
      }
 
 

@@ -111,12 +111,14 @@ class Application
             $interfaceName = $interface->getName();
 
             $implementation = $this->dependencies[$interfaceName];
+
             if (array_key_exists($implementation, $this->resolvedDependencies)) {
                 $implementationInstance = $this->resolvedDependencies[$implementation];
             } else {
                 $implementationInstance = $this->resolve($implementation);
                 $this->resolvedDependencies[$implementation] = $implementationInstance;
             }
+
 
 
             $parametersToInstantiate[] = $implementationInstance;

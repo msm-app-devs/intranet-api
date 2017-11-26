@@ -11,4 +11,6 @@ interface AuthenticationServiceInterface
     public function getUserId();
 
     public function isTokenCorrect() : bool;
+
+    public function getUserInfo();
 }

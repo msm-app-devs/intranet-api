@@ -8,22 +8,16 @@
         $(document).ready(function(){
 
             $.ajax({
-                type: 'PUT',
+                type: 'POST',
 //                url: 'http://q1q1.eu/employees/employees/10',
-                url: '../employees/1',
+                url: '../news',
 //                data :  JSON.stringify({"newWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":"4","SaturdayHours":0,"SundayHours":0},"oldWeekEntry":{"MondayHours":2,"TuesdayHours":2,"WednesdayHours":5,"ThursdayHours":5,"FridayHours":2,"SaturdayHours":0,"SundayHours":0}}),
                 data : {
-                    id: 1,
-                    extId: 1,
-                    firstName: "Grigor",
-                    lastName: "Dimitrov",
-                    position: "Scripting",
-                    team : "System one",
-                    startDate : "05/05/2014",
-                    birthday: "12/10/1993",
-                    active: "yes"
+                    title: 1,
+                    body: "Grigor",
+                    image: "Dimitrov"
                 },
-//                headers: {"X-HTTP-Method-Override": "PUT"},
+                headers: {"autorization": "Bearer 0262c1e2bf666d184ed7f5e074f0022c53bd468aeef21ff9f1a3a416ce34cd187546db3b8bf8bcfc2b4b79ae78776547f702f740be0a67aa093efd2c28503c7f"},
 //                dataType: 'json',
                 //contentType: "application/json",
                 success: function(response) {

@@ -75,6 +75,8 @@ $theMethod = new Ember(array_shift($args), $requestMethod);
 $controllerName = $theMethod->getController();
 count($args) > 0 ? array_push($arguments,array_shift($args)) : $arguments ;
 $actionName = $theMethod->getMethod();
+
+
 //$actionName = array_shift($args);
 $dbInstanceName = 'default';
 $headers = [];
@@ -124,7 +126,6 @@ Database::setInstance(
     DbConfig::DB_NAME,
     $dbInstanceName
 );
-
 
 
 $mvcContext = new \Employees\Core\MVC\MVCContext(
@@ -192,7 +193,9 @@ $app->registerDependency(
 $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::class,
     \Employees\Services\CreatingQuerySevice::class);
 
-
+$app->registerDependency(\Employees\Services\NewsServiceInterface::class,
+    \Employees\Services\NewsService::class
+    );
 //$app->registerDependency(
 //    \SoftUni\Services\CategoryServiceInterface::class,
 //    \SoftUni\Services\CategoryService::class

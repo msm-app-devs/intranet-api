@@ -48,6 +48,7 @@ class UserService implements UserServiceInterface
         $user = $stmt->fetchObject(User::class);
 
 
+
         if ($user == null) {
 
             return false;
