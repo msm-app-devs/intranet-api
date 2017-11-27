@@ -9,7 +9,8 @@
 namespace Employees\Services;
 
 use Employees\Adapter\DatabaseInterface;
-use NewsBindingModel;
+use Employees\Models\Binding\News\NewsBindingModel;
+
 
 
 class NewsService implements NewsServiceInterface
@@ -84,7 +85,15 @@ class NewsService implements NewsServiceInterface
 
     public function removeNews($id)
     {
+        $query = "UPDATE 
+                  news 
+                  SET 
+                  active = ?  
+                  WHERE id = ?";
 
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute(["no",$id]);
     }
 
 

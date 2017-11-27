@@ -9,7 +9,7 @@
 namespace Employees\Services;
 
 
-use NewsBindingModel;
+use Employees\Models\Binding\News\NewsBindingModel;
 
 interface NewsServiceInterface
 {

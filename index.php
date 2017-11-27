@@ -37,7 +37,7 @@ header('Content-Type: application/json; charset=utf-8');
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
     $class = str_replace("\\",DIRECTORY_SEPARATOR, $class);
-    //var_dump($class);
+
     require_once $class . '.php';
 });
 
@@ -77,10 +77,13 @@ count($args) > 0 ? array_push($arguments,array_shift($args)) : $arguments ;
 $actionName = $theMethod->getMethod();
 
 
+
 //$actionName = array_shift($args);
 $dbInstanceName = 'default';
 $headers = [];
 $keyHolds = "";
+
+
 
 if ($requestMethod != "OPTIONS") {
 

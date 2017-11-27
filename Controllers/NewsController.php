@@ -9,11 +9,11 @@
 namespace Employees\Controllers;
 
 
+use Employees\Models\Binding\News\NewsBindingModel;
 use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
 use Employees\Services\NewsServiceInterface;
-use NewsBindingModel;
 
 class NewsController
 {
@@ -42,11 +42,12 @@ class NewsController
     public function addNews(NewsBindingModel $bindingModel)
     {
         $author = $this->authenticationService->getUserInfo();
-        $now = date("dd/mm/yy");
+        $now = date("d/m/y");
 
         $bindingModel->setDate($now);
         $bindingModel->setAuthor($author["first"]." ".$author["last"]);
         $bindingModel->setAdminId($author["id"]);
+
 
         if ($this->newsService->addNews($bindingModel)) {
             print_r("true");
@@ -55,10 +56,13 @@ class NewsController
         }
     }
 
-    public function updateNews()
-    {
-
-    }
+//    public function updateNews(NewsBindingModel $bindingModel)
+//    {
+////        var_dump($bindingModel);
+//        foreach ($bindingModel as $key=>$value) {
+//            var_dump($key);
+//        }
+//    }
 
 
     public function deleteNews()

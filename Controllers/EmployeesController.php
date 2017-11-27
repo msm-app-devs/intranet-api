@@ -100,7 +100,7 @@ class EmployeesController
 
     }
 
-    public function updateemployee($theid,EmpBindingModel $empBindingModel)
+    public function updateemployee($theid, EmpBindingModel $empBindingModel)
     {
 
         if ($this->authenticationService->isTokenCorrect()) {

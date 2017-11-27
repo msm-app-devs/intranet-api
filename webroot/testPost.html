@@ -8,20 +8,21 @@
         $(document).ready(function(){
 
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
 //                type: 'DELETE',
 //                url: 'http://q1q1.eu/employees/employees',
-                url: '../employees',
-                data: {
-                    extId: 10,
-                    firstName: "Martin",
-                    lastName: "Radevvv",
-                    position: "Charting",
-                    team : "Charting",
-                    startDate : "10/08/2010",
-                    birthday: "12/05/1980",
-                    active: "yes"
-                },
+                url: '../news',
+                data :   JSON.stringify({"news":{"author":"admin","title":"another news","body":"This is another news for our company"}}),
+//                data: {
+//                    title: "News 3",
+//                    body: "Martin",
+//                    image: "Radevvv"
+//                    position: "Charting",
+//                    team : "Charting",
+//                    startDate : "10/08/2010",
+//                    birthday: "12/05/1980",
+//                    active: "yes"
+//                },
                 success: function(response) {
                     console.log(response);
                     $("#div1").html(response);

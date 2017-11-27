@@ -67,7 +67,7 @@ class AuthenticationService implements AuthenticationServiceInterface
 
     public function getUserInfo()
     {
-        $query = "SELECT id, first_name AS first, last_name AS last FROM admins LEFT JOIN admin_tokens ON admins.id = admin_tokens.admin_id WHERE admin_tokens.token = ?";
+        $query = "SELECT admins.id, admins.first_name AS first, admins.last_name AS last FROM admins LEFT JOIN admin_tokens ON admins.id = admin_tokens.admin_id WHERE admin_tokens.token = ?";
 
         $stmt = $this->db->prepare($query);
 
