@@ -42,7 +42,13 @@ class Ember
                     $this->phpInput = json_decode(file_get_contents("php://input"), true);
 
 //                $_POST = $this->phpInput['employee'];
-                $_POST = $this->phpInput[$this->theController];
+                if ($this->theController == "employees") {
+                    $_POST = $this->phpInput["employee"];
+                } else {
+                    $_POST = $this->phpInput[$this->theController];
+                }
+
+
             }
         }
 
