@@ -4,24 +4,23 @@ use Employees\Adapter\Database;
 use Employees\Config\DbConfig;
 use Employees\Config\DefaultParam;
 use Employees\Adapter\Ember;
-
-//var_dump("TEST");
-//exit;
+use Employees\Core\MVC\KeyHolder;
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+//header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin');
+header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
+//header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin, X-Auth-Token, authorization');
+//header('X-Auth-Token: test1123');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
 
 
-session_start();
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
     $class = str_replace("\\",DIRECTORY_SEPARATOR, $class);
-    //var_dump($class);
-    require_once $class . '.php';
 
+    require_once $class . '.php';
 });
 
 //$arr = [];
@@ -33,15 +32,19 @@ spl_autoload_register(function($class){
 //var_dump(json_decode(file_get_contents("php://input"),true));
 //exit;
 
-$uri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER["REQUEST_METHOD"];
+
+$uri = $_SERVER['REQUEST_URI']; // URI
+$requestMethod = $_SERVER["REQUEST_METHOD"]; //requested method
 $self = $_SERVER['PHP_SELF'];
+
 $arguments = [];
-$theMethod = new Ember($requestMethod);
+
 
 
 $self = str_replace("index.php","",$self);
+
 $uri = str_replace($self, '', $uri);
+
 // $uri = substr($uri, 1);
 
 //var_dump("$uri");
@@ -49,25 +52,30 @@ $uri = str_replace($self, '', $uri);
 
 $args = explode("/",$uri);
 
-$controllerName = array_shift($args);
+$theMethod = new Ember(array_shift($args), $requestMethod);
+
+$controllerName = $theMethod->getController();
 count($args) > 0 ? array_push($arguments,array_shift($args)) : $arguments ;
 $actionName = $theMethod->getMethod();
+
+
+
 //$actionName = array_shift($args);
 $dbInstanceName = 'default';
+$headers = [];
+$keyHolds = "";
 
 
-//var_dump($_POST);
-//exit;
+if ($requestMethod != "OPTIONS") {
 
-//if ($controllerName == NULL || $actionName == NULL) {
-//    $controllerName = DefaultParam::DefaultController;
-//    $actionName = DefaultParam::DefaultAction;
-//}
+    $headers = getallheaders();
 
-// $uri = substr($uri, 1);
+    if (array_key_exists("Authorization", $headers)) {
+        $keyHolds = $headers["Authorization"];
+    }
 
-//var_dump("$uri");
-//exit;
+}
+
 
 Database::setInstance(
     DbConfig::DB_HOST,
@@ -77,6 +85,7 @@ Database::setInstance(
     $dbInstanceName
 );
 
+
 $mvcContext = new \Employees\Core\MVC\MVCContext(
     $controllerName,
     $actionName,
@@ -85,8 +94,7 @@ $mvcContext = new \Employees\Core\MVC\MVCContext(
 //    $args
 );
 
-//var_dump($arguments);
-//exit;
+
 
 $app = new \Employees\Core\Application($mvcContext);
 
@@ -98,8 +106,11 @@ $app->addClass(
 
 $app->addClass(
     \Employees\Core\MVC\SessionInterface::class,
-    new \Employees\Core\MVC\Session($_SESSION)
+        new \Employees\Core\MVC\Session($_SESSION)
 );
+
+    $app->addClass(\Employees\Core\MVC\KeyHolderInterface::class,
+        new \Employees\Core\MVC\KeyHolder($keyHolds));
 
 $app->addClass(
  \Employees\Adapter\DatabaseInterface::class,
@@ -136,12 +147,10 @@ $app->registerDependency(
 );
 
 $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::class,
-    \Employees\Services\CreatingQuerySevice::class);
+    \Employees\Services\CreatingQueryService::class);
 
-//$app->registerDependency(
-//    \SoftUni\Services\CategoryServiceInterface::class,
-//    \SoftUni\Services\CategoryService::class
-//);
-
+$app->registerDependency(\Employees\Services\NewsServiceInterface::class,
+    \Employees\Services\NewsService::class
+    );
 
 $app->start();

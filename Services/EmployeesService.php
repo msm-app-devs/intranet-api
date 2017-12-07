@@ -11,11 +11,14 @@ namespace Employees\Services;
 
 use Employees\Adapter\DatabaseInterface;
 use Employees\Models\Binding\Emp\EmpBindingModel;
+use Employees\Services\CreatingQueryServiceInterface;
+
 
 class EmployeesService implements EmployeesServiceInterface
 {
 
     private $db;
+    private $queryService;
 
     public function __construct(DatabaseInterface $db)
     {
@@ -135,36 +138,29 @@ class EmployeesService implements EmployeesServiceInterface
     }
 
 //    public function updEmp(EmpBindingModel $model)
-    public function updEmp($columns, $values)
+    public function updEmp(EmpBindingModel $empBindingModel)
     {
 
-        $query = "UPDATE employees SET ".$columns;
+        $updatePropArray = [
+            "first_name"=>$empBindingModel->getFirstName(),
+            "last_name"=>$empBindingModel->getLastName(),
+            "position"=>$empBindingModel->getPosition(),
+            "team"=>$empBindingModel->getTeam(),
+            "start_date"=>$empBindingModel->getStartDate(),
+            "birthday"=>$empBindingModel->getBirthday(),
+            "active"=>$empBindingModel->getActive()
+        ];
+
+
+        $createQuery = new CreatingQueryService();
+        $createQuery->setValues($updatePropArray);
+        $createQuery->setQueryUpdateEmp($empBindingModel->getId());
+
+        $query = "UPDATE employees SET ".$createQuery->getQuery();
 
         $stmt = $this->db->prepare($query);
-        return $stmt->execute($values);
-//                $query = "UPDATE
-//                 employees
-//                 SET
-//                 first_name = ?,
-//                 last_name = ?,
-//                 position = ?,
-//                 team = ?,
-//                 start_date = ?,
-//                 birthday = ?
-//                 WHERE id = ?";
-//
-//        $stmt = $this->db->prepare($query);
-//        return $stmt->execute(
-//            [
-////            $model->getFirstName(),
-//            $model->getLastName(),
-//            $model->getPosition(),
-//            $model->getTeam(),
-//            $model->getStartDate(),
-//            $model->getBirthday(),
-//            $model->getId()
-//        ]
-//        );
+        return $stmt->execute($createQuery->getValues());
+
     }
 
     public function removeEmp($empId) : bool {

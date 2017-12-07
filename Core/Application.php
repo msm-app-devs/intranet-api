@@ -64,7 +64,6 @@ class Application
 
                 if (!$parameterClass->isInterface()) {
 
-
                     $instance = $this->mapForm($_POST, $parameterClass);
 
                 } else {
@@ -77,7 +76,6 @@ class Application
      ////////////////////////////////////////////////////////////////////
 
         if (class_exists($controllerFullQualifiedName)) {
-
 
             $controller = $this->resolve($controllerFullQualifiedName);
             call_user_func_array(
@@ -105,20 +103,25 @@ class Application
         }
         $parameters = $constructor->getParameters();
         $parametersToInstantiate = [];
+//        var_dump($parameters);
+//        exit;
         foreach ($parameters as $parameter){
             $interface = $parameter->getClass();
+
             if ($interface === null) {
                throw new \Exception("Parameters cannot be primitive in order the DI to work!");
             }
             $interfaceName = $interface->getName();
 
             $implementation = $this->dependencies[$interfaceName];
+
             if (array_key_exists($implementation, $this->resolvedDependencies)) {
                 $implementationInstance = $this->resolvedDependencies[$implementation];
             } else {
                 $implementationInstance = $this->resolve($implementation);
                 $this->resolvedDependencies[$implementation] = $implementationInstance;
             }
+
 
 
             $parametersToInstantiate[] = $implementationInstance;

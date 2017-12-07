@@ -7,18 +7,18 @@
     <script>
         $(document).ready(function(){
                 $.ajax({
-                    url: "../employees",
-//                    url: "http://q1q1.eu/employees/employees/list",
-                    type: 'GET'
-//                    headers: {"X-My-Custom-Header": "some value"}
+//                    url: "../employees",
+                    url: "http://localhost/intranet-api/employees/3",
+                    type: 'DELETE'
+                    //headers: {"X-Auth-Token": "test1233"}
 //                    beforeSend: function(xhr){
 //                        xhr.setRequestHeader('Authorization', 'Basic guest:guest123');
 //                    },
 //                    withCredentials: true
 
                 }).done(function(data){
-                    $("#div1").text(data);
-                    console.log(jQuery.parseJSON(data));
+                    $("#div1").html(data);
+                    //console.log(jQuery.parseJSON(data));
                 });
 
 //                $.ajax({url: "../employees/list", success: function(result){

@@ -4,23 +4,23 @@ namespace Employees\Models\Binding\Users;
 
 class UserLoginBindingModel
 {
-    private $email;
+    private $username;
     private $password;
 
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->email;
+        return $this->username;
     }
 
     /**
      * @param mixed $email
      */
-    public function setEmail($email)
+    public function setUsername($username)
     {
-        $this->email = $email;
+        $this->username = $username;
     }
 
     /**

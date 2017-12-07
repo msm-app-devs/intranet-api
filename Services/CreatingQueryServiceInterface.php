@@ -9,13 +9,13 @@
 namespace Employees\Services;
 
 
-use Employees\Models\Binding\Emp\EmpBindingModel;
-
 interface CreatingQueryServiceInterface
 {
-    public function setQueryUpdateEmp(EmpBindingModel $bindingModel);
+    public function setQueryUpdateEmp($theId);
 
     public function getQuery() : string;
 
     public function getValues() : array;
+
+    public function setValues($values);
 }

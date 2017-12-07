@@ -7,30 +7,102 @@
     <script>
         $(document).ready(function(){
 
-            $.ajax({
-                type: 'POST',
-//                type: 'DELETE',
-//                url: 'http://q1q1.eu/employees/employees',
-                url: '../employees',
-                data: {
-                    extId: 10,
-                    firstName: "Martin",
-                    lastName: "Radevvv",
-                    position: "Charting",
-                    team : "Charting",
-                    startDate : "10/08/2010",
-                    birthday: "12/05/1980",
-                    active: "yes"
-                },
-                success: function(response) {
-                    console.log(response);
-                    $("#div1").html(response);
-                }
+            $("#upload").click(function(){
+//                var file_data = $('#image_uploader').prop('files')[0];
+//                var form_data = new FormData();
+//                form_data.append('file', file_data);
+//                console.log(form_data);
+
+                var fd = new FormData();
+                var file_data = $('#image_uploader').prop('files')[0]; // for multiple files
+                fd.append('file',file_data);
+//                for(var i = 0;i<file_data.length;i++){
+//                    fd.append("file_"+i, file_data[i]);
+//                }
+                console.log(fd);
+                var test_data = [{
+                        name:"firstName", value:"Zlatan"},
+                    {
+                        name:"lastName", value:"Ibrahimovich"},
+                    {
+                        name:"position", value:"Business analytics"},
+                    {
+                        name:"team", value:"Business"},
+                    {
+                        name:"startDate", value:"07/09/2016"},
+                    {name:"birthday", value:"12/11/1987"}];
+//                var other_data = $('form').serializeArray();
+                var other_data = test_data;
+                console.log(other_data);
+                $.each(other_data,function(key,input){
+//                    alert(input.value);
+                    fd.append(input.name,input.value);
+                });
+
+
+
+                $.ajax({
+                    url: '../employees/1',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data){
+                        console.log(data);
+                    }
+                });
+
+
+//                $.ajax({
+//                    url: '../employees/1', // point to server-side PHP script
+//                    dataType: 'text',  // what to expect back from the PHP script, if anything
+//                    cache: false,
+//                    contentType: false,
+//                    processData: false,
+////                    data: JSON.stringify({'image':form_data}),
+//                    data: JSON.stringify({"employee" :
+//                        {extId: 4,
+//                        firstName: "Zlatan",
+//                        lastName: "Ibrahimovich",
+//                        position: "Business analytics",
+//                        team : "Business",
+//                        startDate : "07/09/2016",
+//                        birthday: "12/11/1987",
+//                        image : form_data}
+//                    }),
+//                    type: 'post',
+//                    success: function(php_script_response){
+//                        alert(php_script_response); // display response from the PHP script, if any
+//                    }
+//                });
             });
+//            $.ajax({
+//                type: 'PUT',
+////                type: 'DELETE',
+////                url: 'http://q1q1.eu/employees/employees',
+//                url: '../employees/1',
+////                data :   JSON.stringify({"news":{"author":"admin","title":"another news","body":"This is another news for our company"}}),
+//                data :   JSON.stringify({"employee":{"firstName":"Grigorrr"}}),
+////                data: {
+////                    title: "News 3",
+////                    body: "Martin",
+////                    image: "Radevvv"
+////                    position: "Charting",
+////                    team : "Charting",
+////                    startDate : "10/08/2010",
+////                    birthday: "12/05/1980",
+////                    active: "yes"
+////                },
+//                success: function(response) {
+//                    console.log(response);
+//                    $("#div1").html(response);
+//                }
+//            });
         });
     </script>
 </head>
 <body>
 <div id="div1"></div>
+Upload image:<input type="file" id="image_uploader"><div id="upload">Upload</div>
 </body>
 </html>
