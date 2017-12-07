@@ -6,7 +6,9 @@ use Employees\Config\DefaultParam;
 use Employees\Adapter\Ember;
 use Employees\Core\MVC\KeyHolder;
 
-header('Access-Control-Allow-Origin: *');
+//TEST TEST TEST
+
+header('Access-Controlgit -Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 //header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin');
 header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
