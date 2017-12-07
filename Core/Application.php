@@ -103,8 +103,11 @@ class Application
         }
         $parameters = $constructor->getParameters();
         $parametersToInstantiate = [];
+//        var_dump($parameters);
+//        exit;
         foreach ($parameters as $parameter){
             $interface = $parameter->getClass();
+
             if ($interface === null) {
                throw new \Exception("Parameters cannot be primitive in order the DI to work!");
             }

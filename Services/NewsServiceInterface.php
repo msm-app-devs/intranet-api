@@ -17,9 +17,11 @@ interface NewsServiceInterface
 
     public function getNews($id);
 
-    public function addNews(NewsBindingModel $newsBindingModel) : bool;
+    public function getNewsByStrId($uniqueStr) : array ;
 
-    public function updateNews();
+    public function addNews(NewsBindingModel $newsBindingModel, $uniqueStr) : bool;
+
+    public function updateNews(NewsBindingModel $bindingModel) : bool;
 
     public function removeNews($id);
 }

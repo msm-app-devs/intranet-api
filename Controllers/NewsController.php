@@ -34,6 +34,10 @@ class NewsController
         $this->authenticationService = $authenticationService;
     }
 
+    public function option() {
+
+    }
+
     public function getNews()
     {
         print_r(json_encode(array("news" => $this->newsService->getAllNews("yes"))));
@@ -41,6 +45,7 @@ class NewsController
 
     public function addNews(NewsBindingModel $bindingModel)
     {
+
         $author = $this->authenticationService->getUserInfo();
         $now = date("d/m/y");
 
@@ -49,25 +54,37 @@ class NewsController
         $bindingModel->setAdminId($author["id"]);
 
 
-        if ($this->newsService->addNews($bindingModel)) {
-            print_r("true");
+        $md5string = $this->encryptionService->md5generator(time().$bindingModel->getTitle().$bindingModel->getBody());
+
+        if ($this->newsService->addNews($bindingModel, $md5string)) {
+            print_r(json_encode(array("news" => $this->newsService->getNewsByStrId($md5string))));
         } else {
             print_r("false");
         }
     }
 
-//    public function updateNews(NewsBindingModel $bindingModel)
-//    {
-////        var_dump($bindingModel);
-//        foreach ($bindingModel as $key=>$value) {
-//            var_dump($key);
-//        }
-//    }
-
-
-    public function deleteNews()
+    public function updateNews($theId,NewsBindingModel $bindingModel)
     {
+        $bindingModel->setId($theId);
 
+        $this->newsService->updateNews($bindingModel);
+
+        if ($this->newsService->updateNews($bindingModel)) {
+            print_r(json_encode(array("news" => $this->newsService->getNews($theId))));
+        } else {
+            print_r("false");
+        }
+    }
+
+
+    public function deleteNews($newsId)
+    {
+        if ($this->newsService->removeNews($newsId)) {
+            print_r("true");
+        }
+        else {
+            print_r("false");
+        }
     }
 
 }

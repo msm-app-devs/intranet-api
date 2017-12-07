@@ -11,12 +11,31 @@ namespace Employees\Models\Binding\News;
 
 class NewsBindingModel
 {
+    private $id;
     private $author;
     private $adminId;
     private $date;
     private $title;
     private $body;
     private $image;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+
 
     /**
      * @return mixed

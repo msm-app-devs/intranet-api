@@ -22,11 +22,13 @@ header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
 //header('X-Auth-Token: test1123');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
+//header('Content-Type: image/jpeg');
 //header('Authorization: testtesttestttt');
 
 //
 
 
+//var_dump(file_get_contents("php://input"),true);
 //var_dump($_SERVER["authorization"]);
 
 //exit;
@@ -82,7 +84,6 @@ $actionName = $theMethod->getMethod();
 $dbInstanceName = 'default';
 $headers = [];
 $keyHolds = "";
-
 
 
 if ($requestMethod != "OPTIONS") {
@@ -194,7 +195,7 @@ $app->registerDependency(
 );
 
 $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::class,
-    \Employees\Services\CreatingQuerySevice::class);
+    \Employees\Services\CreatingQueryService::class);
 
 $app->registerDependency(\Employees\Services\NewsServiceInterface::class,
     \Employees\Services\NewsService::class

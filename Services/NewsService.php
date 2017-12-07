@@ -51,8 +51,26 @@ class NewsService implements NewsServiceInterface
         return $result;
     }
 
-    public function addNews(NewsBindingModel $newsBindingModel) : bool
+    public function getNewsByStrId($uniqueStr) : array {
+        $query = "SELECT 
+                  id,
+                  title,
+                  date,
+                  body,
+                  image 
+                  FROM news WHERE unique_str_code = ? AND active = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->execute([$uniqueStr, "yes"]);
+        $result = $stmt->fetch();
+
+        return $result;
+    }
+
+    public function addNews(NewsBindingModel $newsBindingModel, $uniqueStr) : bool
     {
+
         $query = "INSERT INTO 
                   news (
                   admin_id,
@@ -61,9 +79,10 @@ class NewsService implements NewsServiceInterface
                   author,
                   title,
                   body,
-                  image
+                  image, 
+                  unique_str_code
                   ) 
-                  VALUES (?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -73,14 +92,31 @@ class NewsService implements NewsServiceInterface
             $newsBindingModel->getDate(),
             $newsBindingModel->getAuthor(),
             $newsBindingModel->getTitle(),
-            $newsBindingModel->getBody(),
-            $newsBindingModel->getImage()
+            "body",
+            //$newsBindingModel->getBody(),
+            "TEST",
+            //$newsBindingModel->getImage(),
+            $uniqueStr
         ]);
     }
 
-    public function updateNews()
+    public function updateNews(NewsBindingModel $bindingModel) : bool
     {
+        $arr = [
+            "author"=>$bindingModel->getAuthor(),
+            "title"=>$bindingModel->getTitle(),
+            "body"=>$bindingModel->getBody(),
+            "image"=>$bindingModel->getImage()
+        ];
 
+        $createQuery = new CreatingQueryService();
+        $createQuery->setValues($arr);
+        $createQuery->setQueryUpdateEmp($bindingModel->getId());
+
+        $query = "UPDATE news SET ".$createQuery->getQuery();
+
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute($createQuery->getValues());
     }
 
     public function removeNews($id)

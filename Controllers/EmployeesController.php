@@ -37,7 +37,7 @@ class EmployeesController
     public function list($active = null)
     {
 
-//        if ($this->authenticationService->isTokenCorrect()) {
+        //if ($this->authenticationService->isTokenCorrect()) {
 
             if ($active == null) {
 
@@ -49,7 +49,7 @@ class EmployeesController
 
             }
 
-//        }
+        //}
 
     }
 
@@ -103,22 +103,20 @@ class EmployeesController
     public function updateemployee($theid, EmpBindingModel $empBindingModel)
     {
 
-        if ($this->authenticationService->isTokenCorrect()) {
+        //if ($this->authenticationService->isTokenCorrect()) {
 
             $empBindingModel->setId($theid);
 
-            $this->createQuery->setQueryUpdateEmp($empBindingModel);
-
             //        if ($this->employeeService->updEmp($empBindingModel)) {
-            if ($this->employeeService->updEmp($this->createQuery->getQuery(), $this->createQuery->getValues())) {
+            if ($this->employeeService->updEmp($empBindingModel)) {
                 print_r(json_encode(array("employees" => $this->employeeService->getEmp($empBindingModel->getId()))));
             } else {
                 print_r("false");
             }
 
-           } else {
-            http_response_code("404");
-        }
+//           } else {
+//            http_response_code("404");
+//        }
     }
 
 }

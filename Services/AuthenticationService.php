@@ -52,16 +52,18 @@ class AuthenticationService implements AuthenticationServiceInterface
 
         $stmt = $this->db->prepare($query);
 
-       $stmt->execute([substr($this->holder->getTokenKey(),7)]);
+        if ($stmt->execute([substr($this->holder->getTokenKey(),7)])) {
 
-       $result = $stmt->fetch();
+            $result = $stmt->fetch();
+            if (is_array($result)) {
+                if (array_key_exists('expire',$result)) {
+                    return $this->isExpired($result['expire']);
+                }
+            }
 
+        }
 
-       if (array_key_exists('expire',$result)) {
-           return $this->isExpired($result['expire']);
-       } else {
-           return false;
-       }
+       return false;
 
     }
 
