@@ -6,14 +6,6 @@ use Employees\Config\DefaultParam;
 use Employees\Adapter\Ember;
 use Employees\Core\MVC\KeyHolder;
 
-//var_dump("TEST");
-//exit;
-
-//var_dump("TEST");
-//exit;
-
-
-
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 //header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin');
@@ -22,19 +14,7 @@ header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
 //header('X-Auth-Token: test1123');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
-//header('Content-Type: image/jpeg');
-//header('Authorization: testtesttestttt');
 
-//
-
-
-//var_dump(file_get_contents("php://input"),true);
-//var_dump($_SERVER["authorization"]);
-
-//exit;
-//var_dump(headers_list());
-
-//session_start();
 
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
@@ -94,34 +74,8 @@ if ($requestMethod != "OPTIONS") {
         $keyHolds = $headers["Authorization"];
     }
 
-//    if($controllerName == "admin" && ) {
-//
-//
-//                http_response_code(404) ;
-//                exit;
-//            } else if ($controllerName == "admin" && $actionName == "token"){
-//
-//
-//                if (false) {
-//
-//                    exit;
-//                }
-//
-//
-//            }
 }
 
-
-
-//if ($controllerName == NULL || $actionName == NULL) {
-//    $controllerName = DefaultParam::DefaultController;
-//    $actionName = DefaultParam::DefaultAction;
-//}
-
-// $uri = substr($uri, 1);
-
-//var_dump("$uri");
-//exit;
 
 Database::setInstance(
     DbConfig::DB_HOST,
@@ -140,8 +94,6 @@ $mvcContext = new \Employees\Core\MVC\MVCContext(
 //    $args
 );
 
-//var_dump($arguments);
-//exit;
 
 
 $app = new \Employees\Core\Application($mvcContext);
@@ -200,10 +152,5 @@ $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::clas
 $app->registerDependency(\Employees\Services\NewsServiceInterface::class,
     \Employees\Services\NewsService::class
     );
-//$app->registerDependency(
-//    \SoftUni\Services\CategoryServiceInterface::class,
-//    \SoftUni\Services\CategoryService::class
-//);
-
 
 $app->start();

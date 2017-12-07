@@ -116,6 +116,7 @@ class NewsService implements NewsServiceInterface
         $query = "UPDATE news SET ".$createQuery->getQuery();
 
         $stmt = $this->db->prepare($query);
+
         return $stmt->execute($createQuery->getValues());
     }
 
