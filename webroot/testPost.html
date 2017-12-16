@@ -4,8 +4,48 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <script>
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#blah').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function getBase64Image(img) {
+            // Create an empty canvas element
+            var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Copy the image contents to the canvas
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+
+            // Get the data-URL formatted image
+            // Firefox supports PNG and JPEG. You could check img.src to
+            // guess the original format, but be aware the using "image/jpg"
+            // will re-encode the image.
+            var dataURL = canvas.toDataURL("image/png");
+
+            return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+//                return dataURL;
+        }
+
+
         $(document).ready(function(){
+
+
+            $("#image_uploader").change(function() {
+                readURL(this);
+            });
 
             $("#upload").click(function(){
 //                var file_data = $('#image_uploader').prop('files')[0];
@@ -13,8 +53,12 @@
 //                form_data.append('file', file_data);
 //                console.log(form_data);
 
+                var theImage = $("#blah").prop("src");
+
                 var fd = new FormData();
+
                 var file_data = $('#image_uploader').prop('files')[0]; // for multiple files
+
                 fd.append('file',file_data);
 //                for(var i = 0;i<file_data.length;i++){
 //                    fd.append("file_"+i, file_data[i]);
@@ -33,20 +77,52 @@
                     {name:"birthday", value:"12/11/1987"}];
 //                var other_data = $('form').serializeArray();
                 var other_data = test_data;
-                console.log(other_data);
-                $.each(other_data,function(key,input){
-//                    alert(input.value);
-                    fd.append(input.name,input.value);
-                });
+//                console.log(other_data);
+//                $.each(other_data,function(key,input){
+////                    alert(input.value);
+//                    fd.append(input.name,input.value);
+//                });
+
+                var myform = {};
 
 
+//                $.ajax({
+//
+////             type: 'POST',
+////                url: 'http://q1q1.eu/employees/employees/addemployee',
+//                    url: "../employees",
+//                    type: 'POST',
+//                    data: JSON.stringify({"employee" :
+//                        {extId: 4,
+//                        firstName: "Zlatann",
+//                        lastName: "Zlatinov",
+//                        position: "Business analytics",
+//                        team : "Business",
+//                        startDate : "07/09/2016",
+//                        birthday: "12/11/1987",
+//                        image : theImage.replace(/^data:image\/(png|jpg);base64,/, "")}
+//                    }),
+////                    data: {
+////                        extId: 4,
+////                        firstName: "Zlatann",
+////                        lastName: "Zlatinov",
+////                        position: "Business analytics",
+////                        team : "Business",
+////                        startDate : "07/09/2016",
+////                        birthday: "12/11/1987",
+////                        image: theImage
+////                    },
+//                    success: function(response) {
+//                        console.log(response);
+//                    }
+//                });
 
                 $.ajax({
                     url: '../employees/1',
-                    data: fd,
-                    contentType: false,
+                    data: file_data,
                     processData: false,
-                    type: 'POST',
+                    contentType: "image/png",
+                    type: 'PUT',
                     success: function(data){
                         console.log(data);
                     }
@@ -103,6 +179,8 @@
 </head>
 <body>
 <div id="div1"></div>
-Upload image:<input type="file" id="image_uploader"><div id="upload">Upload</div>
+Upload image:<input type="file" id="image_uploader">
+<img id="blah" src="#" alt="your imageee" />
+<div id="upload">Upload</div>
 </body>
 </html>

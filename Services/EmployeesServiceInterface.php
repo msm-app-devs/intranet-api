@@ -24,6 +24,8 @@ interface EmployeesServiceInterface
 
     public function getEmp($id);
 
+    public function getEmpUniqueStr($id);
+
 //    public function updEmp(EmpBindingModel $model);
     public function updEmp(EmpBindingModel $empBindingModel);
 

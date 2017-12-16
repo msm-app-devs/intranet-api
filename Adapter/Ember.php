@@ -14,66 +14,97 @@ class Ember
     private static $methods = ["employees" =>
                                 array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
                                "news" =>
-                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option")
+                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option"),
+                                "admin"  =>
+                                array("POST"=>"token")
                                 ];
 
     private $theController;
 
     private $theMethod;
 
+    private $requestMethod;
+
+    private $emberController;
+
     private $phpInput = array();
 
     public function __construct($controller, $method)
     {
         $this->theController = $controller;
-        $this->theMethod = $method;
-
-        if ($this->theController == "token") {
-            $this->theController = "admin";
-            $this->theMethod = "token";
+        $this->requestMethod = $method;
+        $this->emberController = $controller;
+//        $this->tokenCheck();
+        if ($this->theController == "imageupdate") {
+                $this->setMethod("updateemployeeimage");
+        } else {
+                $this->setMethod(self::$methods[$this->theController][$this->requestMethod]);
         }
-        else if (count($_POST) > 0) {
-            var_dump("TEST");
-            exit;
-        }
-        else {
-//            parse_str(file_get_contents("php://input"), $this->phpInput);
-            if ($this->theMethod === "PUT" || $this->theMethod === "POST") {
-                    $this->phpInput = json_decode(file_get_contents("php://input"), true);
 
-//                $_POST = $this->phpInput['employee'];
-                if ($this->theController == "employees") {
-                    $_POST = $this->phpInput["employee"];
-                } else {
-                    $_POST = $this->phpInput[$this->theController];
+
+        if ($this->theController == "employees") {
+            $this->emberController = "employee";
+        }
+
+
+
+//        else if (count($_POST) > 0) {
+//        if ($this->theMethod != "token") {
+            ////////////////////////////////// FOR THE IMAGE UPDATE (IN TESTING PHASE) ////////////////////////////////////
+            if ($this->theController == "imageupdate") {
+                if (array_key_exists("image", $_FILES)) {
+
+                    $this->theController = "employees";
+                    $_POST["imageprop"] = $_FILES["image"];
+
+                }
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            } else if ($this->requestMethod === "POST") {
+
+                if (array_key_exists($this->emberController ,$_POST)) {
+                    $_POST = $_POST[$this->emberController];
+                }
+                if (array_key_exists($this->emberController, $_FILES)) {
+
+                    $_POST["imageprop"] = $_FILES[$this->emberController];
+
                 }
 
+            } else if ($this->requestMethod === "PUT") {
 
+                $this->phpInput = json_decode(file_get_contents("php://input"), true);
+                $_POST = $this->phpInput[$this->emberController];
             }
-        }
+//        }
 
     }
 
-    private function customCheck() {
-        if ($this->theController == "token") {
-            $this->theController = "admin";
-            $this->theMethod = "token";
-        }
+//    private function tokenCheck() {
+//        if ($this->theController == "token") {
+//            $this->theController = "admin";
+//            $this->theMethod = "token";
+//        } else {
+//            $this->theMethod = self::$methods[$this->theController][$this->requestMethod];
+//        }
+//    }
+    public function setController($controller) {
+
+        $this->theController = $controller;
     }
 
     public function getController() {
-        //employees/token
+
         return $this->theController;
 
     }
 
+    public function setMethod($method) {
+        $this->theMethod = $method;
+    }
+
     public function getMethod() {
 
-        if ($this->theMethod == "token") {
-            return "token";
-        } else {
-            return self::$methods[$this->theController][$this->theMethod];
-        }
+            return $this->theMethod;
 
     }
 }

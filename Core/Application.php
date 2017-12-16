@@ -106,6 +106,7 @@ class Application
 //        var_dump($parameters);
 //        exit;
         foreach ($parameters as $parameter){
+
             $interface = $parameter->getClass();
 
             if ($interface === null) {

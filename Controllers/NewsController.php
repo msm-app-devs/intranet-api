@@ -45,45 +45,55 @@ class NewsController
 
     public function addNews(NewsBindingModel $bindingModel)
     {
+        if ($this->authenticationService->isTokenCorrect()) {
+            $author = $this->authenticationService->getUserInfo();
+            $now = date("d/m/y");
 
-        $author = $this->authenticationService->getUserInfo();
-        $now = date("d/m/y");
-
-        $bindingModel->setDate($now);
-        $bindingModel->setAuthor($author["first"]." ".$author["last"]);
-        $bindingModel->setAdminId($author["id"]);
+            $bindingModel->setDate($now);
+            $bindingModel->setAuthor($author["first"] . " " . $author["last"]);
+            $bindingModel->setAdminId($author["id"]);
 
 
-        $md5string = $this->encryptionService->md5generator(time().$bindingModel->getTitle().$bindingModel->getBody());
+            $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle() . $bindingModel->getBody());
 
-        if ($this->newsService->addNews($bindingModel, $md5string)) {
-            print_r(json_encode(array("news" => $this->newsService->getNewsByStrId($md5string))));
+            if ($this->newsService->addNews($bindingModel, $md5string)) {
+                print_r(json_encode(array("news" => $this->newsService->getNewsByStrId($md5string))));
+            } else {
+                print_r("false");
+            }
         } else {
-            print_r("false");
+            http_response_code("404");
         }
     }
 
     public function updateNews($theId,NewsBindingModel $bindingModel)
     {
-        $bindingModel->setId($theId);
+        if ($this->authenticationService->isTokenCorrect()) {
+            $bindingModel->setId($theId);
 
-        $this->newsService->updateNews($bindingModel);
+            $this->newsService->updateNews($bindingModel);
 
-        if ($this->newsService->updateNews($bindingModel)) {
-            print_r(json_encode(array("news" => $this->newsService->getNews($theId))));
+            if ($this->newsService->updateNews($bindingModel)) {
+                print_r(json_encode(array("news" => $this->newsService->getNews($theId))));
+            } else {
+                print_r("false");
+            }
         } else {
-            print_r("false");
+            http_response_code("404");
         }
     }
 
 
     public function deleteNews($newsId)
     {
-        if ($this->newsService->removeNews($newsId)) {
-            print_r("true");
-        }
-        else {
-            print_r("false");
+        if ($this->authenticationService->isTokenCorrect()) {
+            if ($this->newsService->removeNews($newsId)) {
+                print_r("true");
+            } else {
+                print_r("false");
+            }
+        } else {
+            http_response_code("404");
         }
     }
 

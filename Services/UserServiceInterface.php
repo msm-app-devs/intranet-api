@@ -6,7 +6,7 @@ use Employees\Models\DB\User;
 
 interface UserServiceInterface
 {
-    public function login($username, $password) : bool;
+    public function login($username, $password);
 
     public function register($username, $password) : bool;
 

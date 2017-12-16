@@ -20,7 +20,41 @@ class EmpBindingModel
     private $team;
     private $startDate;
     private $birthday;
+    private $imageName;
+    private $imageprop;
     private $active = "yes";
+
+    /**
+     * @return mixed
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
+    }
+
+    /**
+     * @param mixed $imageName
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageprop()
+    {
+        return $this->imageprop;
+    }
+
+    /**
+     * @param mixed $imageprop
+     */
+    public function setImageprop($imageprop)
+    {
+        $this->imageprop = $imageprop;
+    }
 
     /**
      * @return mixed

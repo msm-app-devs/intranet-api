@@ -9,6 +9,8 @@ use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
+use Employees\Services\FileUploadService;
+use Employees\Services\FileUploadServiceInterface;
 
 class EmployeesController
 {
@@ -17,16 +19,20 @@ class EmployeesController
     private $encryptionService;
     private $createQuery;
     private $authenticationService;
+    private $fileUploadService;
 
     public function __construct(EmployeesServiceInterface $employeesService,
                                 EncryptionServiceInterface $encryptionService,
                                 CreatingQueryServiceInterface $createQuery,
-                                AuthenticationServiceInterface $authenticationService)
+                                AuthenticationServiceInterface $authenticationService,
+                                FileUploadServiceInterface $fileUploadService
+                                )
     {
         $this->employeeService = $employeesService;
         $this->encryptionService = $encryptionService;
         $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
+        $this->fileUploadService = $fileUploadService;
     }
 
     public function option()
@@ -61,6 +67,8 @@ class EmployeesController
             } else {
                 print_r("false");
             }
+         } else {
+             http_response_code("404");
          }
     }
 
@@ -68,30 +76,36 @@ class EmployeesController
     public function addemployee(EmpBindingModel $employeeBindingModel)
     {
 
-//        var_dump("TEST");
-//        exit;
         if ($this->authenticationService->isTokenCorrect()) {
 
+            $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName() .
+                $employeeBindingModel->getLastName() .
+                $employeeBindingModel->getBirthday() . time());
 
-        $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName().
-            $employeeBindingModel->getLastName().
-            $employeeBindingModel->getBirthday());
+            $fileProp = $employeeBindingModel->getImageprop();
 
-//        var_dump($this->employeeService->getEmpByStrId("7702b7559a2ac1acf907eab6d2f091d5"));
-//        $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2");
-//        var_dump(json_encode($this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"), JSON_FORCE_OBJECT));
-//        print_r(json_encode(array("employees" => $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"))));
-//        exit;
+            $fileType = strtolower(pathinfo($fileProp["name"]["imageThumb"],PATHINFO_EXTENSION));
+
+            $employeeBindingModel->setImageName($md5string.".".$fileType);
+
+            if ($this->fileUploadService->uploadFile($fileProp["tmp_name"]["imageThumb"], "webroot/images", $md5string.".".$fileType)) {
+
+                if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
+
+                    print_r(json_encode(array("employees" => $this->employeeService->getEmpByStrId($md5string))));
+
+                } else {
+                    $this->fileUploadService->removeFile($md5string.$fileType, "webroot/images");
+                    print_r("false");
+                }
+            } else {
+                print_r("NOT LOADED");
+            }
+            } else {
+                http_response_code("404");
+            }
 
 
-        if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
-//            print_r($employeeBindingModel->getPosition());
-            print_r(json_encode(array("employees" =>$this->employeeService->getEmpByStrId($md5string))));
-        } else {
-            print_r("false");
-        }
-
-        }
     }
 
     public function getemployee($id) {
@@ -103,20 +117,55 @@ class EmployeesController
     public function updateemployee($theid, EmpBindingModel $empBindingModel)
     {
 
-        //if ($this->authenticationService->isTokenCorrect()) {
+        $putdata = fopen("php://input", "r");
+
+        /* Open a file for writing */
+        $fp = fopen("webroot/images/rb.png", "w");
+
+        /* Read the data 1 KB at a time
+           and write to the file */
+        while ($data = fread($putdata, 1024))
+            fwrite($fp, $data);
+
+        /* Close the streams */
+        fclose($fp);
+        fclose($putdata);
+        exit;
+
+        if ($this->authenticationService->isTokenCorrect()) {
 
             $empBindingModel->setId($theid);
+            $fileType = end(explode($empBindingModel->getImageName(),"."));
+            $imgTempObj = new FileUploadService("tmp".$empBindingModel->getImageName(), "webroot/images", end(explode($empBindingModel->getImageName(),".")));
+            $imgObj = new FileUploadService($empBindingModel->getImageName(), "webroot/images", end(explode($empBindingModel->getImageName(),".")));
 
-            //        if ($this->employeeService->updEmp($empBindingModel)) {
             if ($this->employeeService->updEmp($empBindingModel)) {
                 print_r(json_encode(array("employees" => $this->employeeService->getEmp($empBindingModel->getId()))));
             } else {
                 print_r("false");
             }
 
-//           } else {
-//            http_response_code("404");
-//        }
+        } else {
+            http_response_code("404");
+        }
+    }
+
+    public function updateemployeeimage($empId, EmpBindingModel $empBindingModel)
+    {
+        if ($this->authenticationService->isTokenCorrect()) {
+
+            $empBindingModel->setId($empId);
+            $fileProp = $empBindingModel->getImageprop();
+            $employeeUniqueStr = $this->employeeService->getEmpUniqueStr($empId);
+
+            var_dump($fileProp);
+            exit;
+//            if ($fileObj->uploadFile( "webroot/images")) {
+//                print_r(json_encode(array("temp_file_uploaded"=>"yes")));
+//            } else {
+//                print_r("FALSE");
+//            }
+        }
     }
 
 }

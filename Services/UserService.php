@@ -29,7 +29,7 @@ class UserService implements UserServiceInterface
         $this->encryptionService = $encryptionService;
     }
 
-    public function login($username, $password) : bool
+    public function login($username, $password)
     {
 
         $query = "SELECT 
@@ -47,27 +47,29 @@ class UserService implements UserServiceInterface
 
         $user = $stmt->fetchObject(User::class);
 
+        return $user;
 
-
-        if ($user == null) {
-
-            return false;
-        }
-        else {
-            return true;
-//            $hash = $user->getPassword();
+//        if ($user == null) {
 //
-//            if ($this->encryptionService->verify($password, $hash)) {
-//                $this->session->set('id',$user->getId());
-//                return true;
-//            } else {
-//
-//                return false;
-//            }
-        }
+//            return false;
+//        }
+//        else {
+//            return true;
+////            $hash = $user->getPassword();
+////
+////            if ($this->encryptionService->verify($password, $hash)) {
+////                $this->session->set('id',$user->getId());
+////                return true;
+////            } else {
+////
+////                return false;
+////            }
+//        }
 
 
     }
+
+
 
     public function register($username, $password) : bool
     {

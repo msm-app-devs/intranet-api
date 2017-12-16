@@ -35,7 +35,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees";
 
         $stmt = $this->db->prepare($query);
@@ -56,7 +57,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees 
                   WHERE active = ?";
 
@@ -77,7 +79,20 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
+                  FROM employees WHERE id = ?";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch();
+
+        return $result;
+    }
+
+    public function getEmpUniqueStr($id) {
+        $query = "SELECT 
+                  unique_str_code AS uniqueStr  
                   FROM employees WHERE id = ?";
 
         $stmt = $this->db->prepare($query);
@@ -96,7 +111,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees WHERE unique_str_code = ? AND active = ?";
 
         $stmt = $this->db->prepare($query);
@@ -118,9 +134,10 @@ class EmployeesService implements EmployeesServiceInterface
                   start_date,
                   birthday,
                   active,
+                  image,
                   unique_str_code
                   )
-                  VALUES (?,?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -132,6 +149,7 @@ class EmployeesService implements EmployeesServiceInterface
             $model->getStartDate(),
             $model->getBirthday(),
             $model->getActive(),
+            $model->getImageName(),
             $uniqueStrId
         ]);
 

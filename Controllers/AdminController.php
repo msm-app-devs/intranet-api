@@ -12,6 +12,7 @@ namespace Employees\Controllers;
 
 use Employees\Core\MVC\KeyHolder;
 use Employees\Models\Binding\Users\UserLoginBindingModel;
+use Employees\Models\DB\User;
 use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\ResponseServiceInterface;
 use Employees\Services\UserServiceInterface;
@@ -40,11 +41,11 @@ class AdminController
 
             $admin = $this->userService->login($username, $password);
 
-            if ($admin != null) {
+            if ($admin != false) {
 
                 $token = bin2hex(openssl_random_pseudo_bytes(64));
 
-                if ($this->userService->userToken(1, $token)) {
+                if ($this->userService->userToken($admin->getId(), $token)) {
 
                     print_r(json_encode(array("access_token" => $token)));
 
