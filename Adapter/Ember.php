@@ -33,13 +33,12 @@ class Ember
             $this->theMethod = "token";
         }
         else if (count($_POST) > 0) {
-            var_dump("TEST");
-            exit;
+
         }
         else {
 //            parse_str(file_get_contents("php://input"), $this->phpInput);
             if ($this->theMethod === "PUT" || $this->theMethod === "POST") {
-                    $this->phpInput = json_decode(file_get_contents("php://input"), true);
+                        $this->phpInput = json_decode(file_get_contents("php://input"), true);
 
 //                $_POST = $this->phpInput['employee'];
                 if ($this->theController == "employees") {

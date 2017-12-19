@@ -35,7 +35,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees";
 
         $stmt = $this->db->prepare($query);
@@ -56,7 +57,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees 
                   WHERE active = ?";
 
@@ -77,7 +79,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees WHERE id = ?";
 
         $stmt = $this->db->prepare($query);
@@ -96,7 +99,8 @@ class EmployeesService implements EmployeesServiceInterface
                   position,
                   team,
                   start_date AS dateStart,
-                  birthday 
+                  birthday,
+                  image 
                   FROM employees WHERE unique_str_code = ? AND active = ?";
 
         $stmt = $this->db->prepare($query);
@@ -117,10 +121,11 @@ class EmployeesService implements EmployeesServiceInterface
                   team,
                   start_date,
                   birthday,
+                  image,
                   active,
                   unique_str_code
                   )
-                  VALUES (?,?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -131,6 +136,7 @@ class EmployeesService implements EmployeesServiceInterface
             $model->getTeam(),
             $model->getStartDate(),
             $model->getBirthday(),
+            $model->getImage(),
             $model->getActive(),
             $uniqueStrId
         ]);

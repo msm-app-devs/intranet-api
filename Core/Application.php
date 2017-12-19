@@ -97,7 +97,9 @@ class Application
         }
         $refClass = new \ReflectionClass($className);
         $constructor = $refClass->getConstructor();
+
         if ($constructor === null) { // nqma argumenti koito sa mu neobhodimi i moje da se napravi direktna instanciq
+
             $instance = new $className();
             return $instance;
         }

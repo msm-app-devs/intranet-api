@@ -20,6 +20,7 @@ class EmpBindingModel
     private $team;
     private $startDate;
     private $birthday;
+    private $image;
     private $active = "yes";
 
     /**
@@ -157,6 +158,22 @@ class EmpBindingModel
     public function getActive()
     {
         return $this->active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
 
     /**

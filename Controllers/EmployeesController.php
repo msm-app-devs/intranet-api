@@ -9,6 +9,7 @@ use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
+use Employees\Services\ImageFromBinServiceInterface;
 
 class EmployeesController
 {
@@ -17,16 +18,19 @@ class EmployeesController
     private $encryptionService;
     private $createQuery;
     private $authenticationService;
+    private $binaryImage;
 
     public function __construct(EmployeesServiceInterface $employeesService,
                                 EncryptionServiceInterface $encryptionService,
                                 CreatingQueryServiceInterface $createQuery,
-                                AuthenticationServiceInterface $authenticationService)
+                                AuthenticationServiceInterface $authenticationService,
+                                ImageFromBinServiceInterface $binService)
     {
         $this->employeeService = $employeesService;
         $this->encryptionService = $encryptionService;
         $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
+        $this->binaryImage = $binService;
     }
 
     public function option()
@@ -61,6 +65,8 @@ class EmployeesController
             } else {
                 print_r("false");
             }
+         } else {
+             http_response_code("404");
          }
     }
 
@@ -75,22 +81,24 @@ class EmployeesController
 
         $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName().
             $employeeBindingModel->getLastName().
-            $employeeBindingModel->getBirthday());
+            $employeeBindingModel->getBirthday().time());
 
-//        var_dump($this->employeeService->getEmpByStrId("7702b7559a2ac1acf907eab6d2f091d5"));
-//        $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2");
-//        var_dump(json_encode($this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"), JSON_FORCE_OBJECT));
-//        print_r(json_encode(array("employees" => $this->employeeService->getEmpByStrId("4e48ba9aeff940707008150a1bc641b2"))));
-//        exit;
+            if($this->binaryImage->CreateImage($employeeBindingModel->getImage(), $md5string, "jpg")) {
+                $employeeBindingModel->setImage("http://localhost:80/intranet-api/webroot/images/".$md5string.".jpg");
+                if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
 
 
-        if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
 //            print_r($employeeBindingModel->getPosition());
-            print_r(json_encode(array("employees" =>$this->employeeService->getEmpByStrId($md5string))));
-        } else {
-            print_r("false");
-        }
 
+                    print_r(json_encode(array("employees" =>$this->employeeService->getEmpByStrId($md5string))));
+                } else {
+                    print_r("false");
+                }
+            } else {
+                    print_r("Image upload failed");
+            }
+        } else {
+            http_response_code("404");
         }
     }
 
@@ -103,7 +111,7 @@ class EmployeesController
     public function updateemployee($theid, EmpBindingModel $empBindingModel)
     {
 
-        //if ($this->authenticationService->isTokenCorrect()) {
+        if ($this->authenticationService->isTokenCorrect()) {
 
             $empBindingModel->setId($theid);
 
@@ -114,9 +122,9 @@ class EmployeesController
                 print_r("false");
             }
 
-//           } else {
-//            http_response_code("404");
-//        }
+           } else {
+            http_response_code("404");
+        }
     }
 
 }
