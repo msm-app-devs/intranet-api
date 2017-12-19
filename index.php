@@ -15,6 +15,28 @@ header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
 
+//$payloadData = json_decode(file_get_contents("php://input"), true);
+//
+////$data = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
+////    . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
+////    . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
+////    . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
+//$data = $payloadData["employee"]["image"];
+//$data = base64_decode($data);
+//
+//$im = imagecreatefromstring($data);
+//
+//if ($im !== false) {
+////    header('Content-Type: image/png');
+////    imagepng($im);
+////    imagedestroy($im);
+//
+//    file_put_contents('webroot/images/test.png', $data);
+//}
+//else {
+//    echo 'An error occurred.';
+//}
+//exit;
 
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
@@ -22,6 +44,8 @@ spl_autoload_register(function($class){
 
     require_once $class . '.php';
 });
+
+
 
 //$arr = [];
 //
@@ -151,6 +175,10 @@ $app->registerDependency(\Employees\Services\CreatingQueryServiceInterface::clas
 
 $app->registerDependency(\Employees\Services\NewsServiceInterface::class,
     \Employees\Services\NewsService::class
+    );
+
+$app->registerDependency(\Employees\Services\ImageFromBinServiceInterface::class,
+    \Employees\Services\ImageFromBinService::class
     );
 
 $app->start();
