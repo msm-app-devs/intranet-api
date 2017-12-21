@@ -44,7 +44,19 @@ class NewsController
 
     public function getNews()
     {
-        print_r(json_encode(array("news" => $this->newsService->getAllNews("yes"))));
+
+        $list = $this->newsService->getAllNews("yes");
+        if (is_array($list)) {
+
+            foreach ($list as $key => $value) {
+
+                if (array_key_exists("image", $list[$key])) {
+                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$list[$key]["image"];
+                }
+            }
+        }
+
+        print_r(json_encode(array("news" => $list)));
     }
 
     public function addNews(NewsBindingModel $bindingModel)
