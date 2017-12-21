@@ -10,6 +10,7 @@ use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
 use Employees\Services\ImageFromBinServiceInterface;
+use Employees\Config\DefaultParam;
 
 class EmployeesController
 {
@@ -45,14 +46,23 @@ class EmployeesController
 
             if ($active == null) {
 
-                print_r(json_encode(array("employee" => $this->employeeService->getListStatus("yes"))));
+                $list = $this->employeeService->getListStatus("yes");
 
             } else {
 
-                print_r(json_encode(array("employee" => $this->employeeService->getEmp($active))));
+                $list =  $this->employeeService->getEmp($active);
 
             }
+        if (is_array($list)) {
 
+            foreach ($list as $key => $value) {
+
+                if (array_key_exists("image", $list[$key])) {
+                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$list[$key]["image"];
+                }
+            }
+        }
+        print_r(json_encode(array("employee" => $list)));
         //}
 
     }
@@ -83,16 +93,15 @@ class EmployeesController
             $employeeBindingModel->getLastName().
             $employeeBindingModel->getBirthday().time());
 
-            if($this->binaryImage->CreateImage($employeeBindingModel->getImage(), $md5string, "jpg")) {
-                $employeeBindingModel->setImage("http://localhost:80/intranet-api/webroot/images/".$md5string.".jpg");
+            if($this->binaryImage->createImage($employeeBindingModel->getImage(), DefaultParam::EmployeeContainer, $md5string, "jpg")) {
+                $employeeBindingModel->setImage($md5string.".jpg");
                 if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
-
-
-//            print_r($employeeBindingModel->getPosition());
-
-                    print_r(json_encode(array("employees" =>$this->employeeService->getEmpByStrId($md5string))));
+                    $empArrray = $this->employeeService->getEmpByStrId($md5string);
+                    $empArrray["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$empArrray['image'];
+                    print_r(json_encode(array("employees" =>$empArrray)));
                 } else {
-                    print_r("false");
+                    $this->binaryImage->removeImage(DefaultParam::EmployeeContainer.$md5string.".jpg");
+                    print_r("Add new employee failed");
                 }
             } else {
                     print_r("Image upload failed");
@@ -114,10 +123,29 @@ class EmployeesController
         if ($this->authenticationService->isTokenCorrect()) {
 
             $empBindingModel->setId($theid);
+            $employee = $this->employeeService->getEmp($theid);
+            $oldImage = $employee["image"];
 
-            //        if ($this->employeeService->updEmp($empBindingModel)) {
+            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/",$empBindingModel->getImage()) > 0 ? true : false;
+
+                if ($isBinaryImage) {
+
+                    $md5string = $this->encryptionService->md5generator($empBindingModel->getFirstName().
+                        $empBindingModel->getLastName().
+                        $empBindingModel->getBirthday().time());
+
+                        $this->binaryImage->createImage($empBindingModel->getImage(),DefaultParam::EmployeeContainer, $md5string, "jpg");
+                        $empBindingModel->setImage($md5string.".jpg");
+                }
+
+
             if ($this->employeeService->updEmp($empBindingModel)) {
-                print_r(json_encode(array("employees" => $this->employeeService->getEmp($empBindingModel->getId()))));
+                if ($isBinaryImage) {
+                    $this->binaryImage->removeImage(DefaultParam::EmployeeContainer.$oldImage);
+                }
+                $updatedEmployee = $this->employeeService->getEmp($empBindingModel->getId());
+                $updatedEmployee["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$updatedEmployee["image"];
+                print_r(json_encode(array("employees" => $updatedEmployee)));
             } else {
                 print_r("false");
             }

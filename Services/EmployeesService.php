@@ -154,6 +154,7 @@ class EmployeesService implements EmployeesServiceInterface
             "team"=>$empBindingModel->getTeam(),
             "start_date"=>$empBindingModel->getStartDate(),
             "birthday"=>$empBindingModel->getBirthday(),
+            "image" => $empBindingModel->getImage(),
             "active"=>$empBindingModel->getActive()
         ];
 

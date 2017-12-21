@@ -11,5 +11,11 @@ namespace Employees\Services;
 
 interface ImageFromBinServiceInterface
 {
-    public function CreateImage($binaryData, $imageName, $imgType) : bool;
+    public function checkBinaryData($binaryData) : bool;
+
+    public function createImage($binaryData, $path, $imageName, $imgType) : bool;
+
+    public function removeImage($imagePath): bool;
+
+
 }

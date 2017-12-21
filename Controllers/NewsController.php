@@ -13,7 +13,9 @@ use Employees\Models\Binding\News\NewsBindingModel;
 use Employees\Services\AuthenticationServiceInterface;
 use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
+use Employees\Services\ImageFromBinServiceInterface;
 use Employees\Services\NewsServiceInterface;
+use Employees\Config\DefaultParam;
 
 class NewsController
 {
@@ -21,17 +23,19 @@ class NewsController
     private $encryptionService;
     private $createQuery;
     private $authenticationService;
-
+    private $binaryImage;
 
     public function __construct(NewsServiceInterface $newsService,
                                 EncryptionServiceInterface $encryptionService,
                                 CreatingQueryServiceInterface $createQuery,
-                                AuthenticationServiceInterface $authenticationService)
+                                AuthenticationServiceInterface $authenticationService,
+                                ImageFromBinServiceInterface $imageFromBinService)
     {
         $this->newsService = $newsService;
         $this->encryptionService = $encryptionService;
         $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
+        $this->binaryImage = $imageFromBinService;
     }
 
     public function option() {
@@ -46,21 +50,38 @@ class NewsController
     public function addNews(NewsBindingModel $bindingModel)
     {
 
-        $author = $this->authenticationService->getUserInfo();
-        $now = date("d/m/y");
+        if ($this->authenticationService->isTokenCorrect()) {
 
-        $bindingModel->setDate($now);
-        $bindingModel->setAuthor($author["first"]." ".$author["last"]);
-        $bindingModel->setAdminId($author["id"]);
+            $author = $this->authenticationService->getUserInfo();
+            $now = date("d/m/y");
+
+            $bindingModel->setDate($now);
+            $bindingModel->setAuthor($author["first"] . " " . $author["last"]);
+            $bindingModel->setAdminId($author["id"]);
 
 
-        $md5string = $this->encryptionService->md5generator(time().$bindingModel->getTitle().$bindingModel->getBody());
+            $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle() . $bindingModel->getBody());
 
-        if ($this->newsService->addNews($bindingModel, $md5string)) {
-            print_r(json_encode(array("news" => $this->newsService->getNewsByStrId($md5string))));
+            if ($this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png")) {
+
+                $bindingModel->setImage($md5string . ".png");
+
+                if ($this->newsService->addNews($bindingModel, $md5string)) {
+                    $newsList = $this->newsService->getNewsByStrId($md5string);
+                    $newsList["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$newsList['image'];
+                    print_r(json_encode(array("news" => $newsList)));
+
+                } else {
+                    $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$md5string.".png");
+                    print_r("Add news failed");
+                }
+            } else {
+                print_r("Image upload failed");
+            }
         } else {
-            print_r("false");
+            http_response_code("404");
         }
+
     }
 
     public function updateNews($theId,NewsBindingModel $bindingModel)

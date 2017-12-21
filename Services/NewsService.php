@@ -25,7 +25,13 @@ class NewsService implements NewsServiceInterface
 
     public function getAllNews($isActive)
     {
-        $query = "SELECT * FROM news WHERE active = ?";
+        $query = "SELECT 
+                  id,
+                  title,
+                  date,
+                  body,
+                  image 
+                  FROM news WHERE active = ?";
 
         $stmt = $this->db->prepare($query);
 
@@ -39,7 +45,12 @@ class NewsService implements NewsServiceInterface
     public function getNews($id)
     {
         $query = "SELECT
-                 * FROM news
+                  id,
+                  title,
+                  date,
+                  body,
+                  image 
+                  FROM news
                   WHERE id = ?";
 
         $stmt = $this->db->prepare($query);
@@ -92,10 +103,9 @@ class NewsService implements NewsServiceInterface
             $newsBindingModel->getDate(),
             $newsBindingModel->getAuthor(),
             $newsBindingModel->getTitle(),
-            "body",
-            //$newsBindingModel->getBody(),
             "TEST",
-            //$newsBindingModel->getImage(),
+//            $newsBindingModel->getBody(),
+            $newsBindingModel->getImage(),
             $uniqueStr
         ]);
     }

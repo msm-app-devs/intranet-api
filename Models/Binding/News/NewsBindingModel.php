@@ -35,8 +35,6 @@ class NewsBindingModel
         $this->id = $id;
     }
 
-
-
     /**
      * @return mixed
      */

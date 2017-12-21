@@ -1,1 +1,1 @@
-<?phpnamespace Employees\Config;class DefaultParam{    const DefaultController = "users";    const DefaultAction = "login";}
+<?phpnamespace Employees\Config;class DefaultParam{    const DefaultController = "users";    const DefaultAction = "login";    const ServerRoot = "http://localhost:80/intranet-api/";    const EmployeeContainer = "webroot/images/";    const NewsImageContainer = "webroot/news/";}
