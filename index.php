@@ -14,7 +14,7 @@ header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
 //header('X-Auth-Token: test1123');
 //header('Content-Type: text/html; charset=utf-8');
 header('Content-Type: application/json; charset=utf-8');
-
+//TEST;
 //$payloadData = json_decode(file_get_contents("php://input"), true);
 //
 ////$data = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
