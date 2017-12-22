@@ -11,6 +11,7 @@ use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
 use Employees\Services\ImageFromBinServiceInterface;
 use Employees\Config\DefaultParam;
+use Employees\Core\DataReturnInterface;
 
 class EmployeesController
 {
@@ -20,18 +21,21 @@ class EmployeesController
     private $createQuery;
     private $authenticationService;
     private $binaryImage;
+    private $dataReturn;
 
     public function __construct(EmployeesServiceInterface $employeesService,
                                 EncryptionServiceInterface $encryptionService,
                                 CreatingQueryServiceInterface $createQuery,
                                 AuthenticationServiceInterface $authenticationService,
-                                ImageFromBinServiceInterface $binService)
+                                ImageFromBinServiceInterface $binService,
+                                DataReturnInterface $dataReturn)
     {
         $this->employeeService = $employeesService;
         $this->encryptionService = $encryptionService;
         $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
         $this->binaryImage = $binService;
+        $this->dataReturn = $dataReturn;
     }
 
     public function option()
@@ -55,14 +59,15 @@ class EmployeesController
             }
         if (is_array($list)) {
 
-            foreach ($list as $key => $value) {
+        foreach ($list as $key => $value) {
 
-                if (array_key_exists("image", $list[$key])) {
-                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$list[$key]["image"];
-                }
+            if (array_key_exists("image", $list[$key])) {
+                $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$list[$key]["image"];
             }
         }
-        print_r(json_encode(array("employee" => $list)));
+    }
+//        print_r(json_encode(array("employee" => $list)));
+        $this->dataReturn->jsonDataReturn($list);
         //}
 
     }

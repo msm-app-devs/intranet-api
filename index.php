@@ -181,4 +181,8 @@ $app->registerDependency(\Employees\Services\ImageFromBinServiceInterface::class
     \Employees\Services\ImageFromBinService::class
     );
 
+$app->registerDependency(\Employees\Core\DataReturnInterface::class,
+    \Employees\Core\DataReturn::class
+    );
+
 $app->start();

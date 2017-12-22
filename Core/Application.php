@@ -28,7 +28,6 @@ class Application
         $implementationName = get_class($instance); // Vseki obekt koito e instanciran s new, tuk shte vyrne imeto na class-a kato string
         $this->dependencies[$interfaceName] = $implementationName;
         $this->resolvedDependencies[$implementationName] = $instance;
-
     }
 
     public function __construct(MVCContextInterface $mvcContext)

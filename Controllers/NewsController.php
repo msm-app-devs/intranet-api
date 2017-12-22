@@ -100,10 +100,27 @@ class NewsController
     {
         $bindingModel->setId($theId);
 
-        $this->newsService->updateNews($bindingModel);
+        $news = $this->newsService->getNews($theId);
+        $oldImage = $news["image"];
+
+        $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/",$bindingModel->getImage()) > 0 ? true : false;
+
+        if ($isBinaryImage) {
+
+            $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle());
+
+            $this->binaryImage->createImage($bindingModel->getImage(),DefaultParam::NewsImageContainer, $md5string, "png");
+            $bindingModel->setImage($md5string.".png");
+        }
 
         if ($this->newsService->updateNews($bindingModel)) {
-            print_r(json_encode(array("news" => $this->newsService->getNews($theId))));
+
+            if ($isBinaryImage) {
+                $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$oldImage);
+            }
+            $updatedNews = $this->newsService->getNews($bindingModel->getId());
+            $updatedNews["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$updatedNews["image"];
+            print_r(json_encode(array("news" => $updatedNews)));
         } else {
             print_r("false");
         }

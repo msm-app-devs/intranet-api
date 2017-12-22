@@ -9,11 +9,22 @@
 namespace Employees\Core;
 
 
+use Employees\Core\MVC\MVCContextInterface;
+
 class DataReturn implements DataReturnInterface
 {
+    private $mvcContext;
 
-    private $dataString;
+    public function __construct(MVCContextInterface $MVCContext)
+    {
+        $this->mvcContext = $MVCContext;
+    }
 
+
+    public function jsonDataReturn($theData)
+    {
+        print_r(json_encode(array($this->mvcContext->getController() => $theData)));
+    }
 
 
 }
