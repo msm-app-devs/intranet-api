@@ -46,7 +46,8 @@ class AuthenticationService implements AuthenticationServiceInterface
         }
     }
 
-    public function isTokenCorrect() : bool {
+    public function isTokenCorrect() : bool
+    {
 
         $query = "SELECT * FROM admin_tokens WHERE token = ?";
 
