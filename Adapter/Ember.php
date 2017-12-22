@@ -14,7 +14,8 @@ class Ember
     private static $methods = ["employees" =>
                                 array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
                                "news" =>
-                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option")
+                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option"),
+                                "admin" => array("POST"=>"token", "OPTIONS" => "option")
                                 ];
 
     private $theController;
