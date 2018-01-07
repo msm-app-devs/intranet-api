@@ -11,5 +11,7 @@ namespace Employees\Core;
 
 interface DataReturnInterface
 {
-    public function jsonDataReturn($theData);
+    public function jsonData($theData);
+
+    public function errorMessage($message);
 }

@@ -11,14 +11,13 @@ namespace Employees\Services;
 
 use Employees\Adapter\DatabaseInterface;
 use Employees\Models\Binding\Emp\EmpBindingModel;
-use Employees\Services\CreatingQueryServiceInterface;
+use Employees\Models\DB\Employee;
 
 
 class EmployeesService implements EmployeesServiceInterface
 {
 
     private $db;
-    private $queryService;
 
     public function __construct(DatabaseInterface $db)
     {
@@ -46,6 +45,7 @@ class EmployeesService implements EmployeesServiceInterface
 
         return $result;
     }
+
 
     public function getListStatus($active)
     {
@@ -89,6 +89,8 @@ class EmployeesService implements EmployeesServiceInterface
 
         return $result;
     }
+
+
 
     public function getEmpByStrId($strId) {
         $query = "SELECT 

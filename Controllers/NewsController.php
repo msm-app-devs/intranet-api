@@ -9,9 +9,9 @@
 namespace Employees\Controllers;
 
 
+use Employees\Core\DataReturnInterface;
 use Employees\Models\Binding\News\NewsBindingModel;
 use Employees\Services\AuthenticationServiceInterface;
-use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
 use Employees\Services\ImageFromBinServiceInterface;
 use Employees\Services\NewsServiceInterface;
@@ -21,21 +21,21 @@ class NewsController
 {
     private $newsService;
     private $encryptionService;
-    private $createQuery;
     private $authenticationService;
     private $binaryImage;
+    private $dataReturn;
 
     public function __construct(NewsServiceInterface $newsService,
                                 EncryptionServiceInterface $encryptionService,
-                                CreatingQueryServiceInterface $createQuery,
                                 AuthenticationServiceInterface $authenticationService,
-                                ImageFromBinServiceInterface $imageFromBinService)
+                                ImageFromBinServiceInterface $imageFromBinService,
+                                DataReturnInterface $dataReturn)
     {
         $this->newsService = $newsService;
         $this->encryptionService = $encryptionService;
-        $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
         $this->binaryImage = $imageFromBinService;
+        $this->dataReturn = $dataReturn;
     }
 
     public function option() {
@@ -56,7 +56,7 @@ class NewsController
             }
         }
 
-        print_r(json_encode(array("news" => $list)));
+        return $this->dataReturn->jsonData($list);
     }
 
     public function addNews(NewsBindingModel $bindingModel)
@@ -68,7 +68,7 @@ class NewsController
             $now = date("d/m/y");
 
             $bindingModel->setDate($now);
-            $bindingModel->setAuthor($author["first"] . " " . $author["last"]);
+            //$bindingModel->setAuthor($author["first"] . " " . $author["last"]);
             $bindingModel->setAdminId($author["id"]);
 
 
@@ -81,60 +81,72 @@ class NewsController
                 if ($this->newsService->addNews($bindingModel, $md5string)) {
                     $newsList = $this->newsService->getNewsByStrId($md5string);
                     $newsList["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$newsList['image'];
-                    print_r(json_encode(array("news" => $newsList)));
+                    return $this->dataReturn->jsonData($newsList);
 
                 } else {
                     $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$md5string.".png");
-                    print_r("Add news failed");
+                    return $this->dataReturn->errorMessage("Add news failed");
                 }
             } else {
-                print_r("Image upload failed");
+                return $this->dataReturn->errorMessage("Image upload failed");
             }
-        } else {
-            http_response_code("404");
         }
 
+        return $this->dataReturn->errorMessage("Access Denied");
     }
 
     public function updateNews($theId,NewsBindingModel $bindingModel)
     {
-        $bindingModel->setId($theId);
+        if ($this->authenticationService->isTokenCorrect()) {
 
-        $news = $this->newsService->getNews($theId);
-        $oldImage = $news["image"];
+            $bindingModel->setId($theId);
 
-        $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/",$bindingModel->getImage()) > 0 ? true : false;
+            $news = $this->newsService->getNews($theId);
 
-        if ($isBinaryImage) {
+            $oldImage = $news["image"];
 
-            $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle());
-
-            $this->binaryImage->createImage($bindingModel->getImage(),DefaultParam::NewsImageContainer, $md5string, "png");
-            $bindingModel->setImage($md5string.".png");
-        }
-
-        if ($this->newsService->updateNews($bindingModel)) {
+            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/", $bindingModel->getImage()) > 0 ? true : false;
 
             if ($isBinaryImage) {
-                $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$oldImage);
+
+                $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle());
+
+                $this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png");
+                $bindingModel->setImage($md5string . ".png");
+            } else {
+                $bindingModel->setImage($oldImage);
             }
-            $updatedNews = $this->newsService->getNews($bindingModel->getId());
-            $updatedNews["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$updatedNews["image"];
-            print_r(json_encode(array("news" => $updatedNews)));
-        } else {
-            print_r("false");
+
+            if ($this->newsService->updateNews($bindingModel)) {
+
+                if ($isBinaryImage) {
+                    $this->binaryImage->removeImage(DefaultParam::NewsImageContainer . $oldImage);
+                }
+                $updatedNews = $this->newsService->getNews($bindingModel->getId());
+                $updatedNews["image"] = DefaultParam::ServerRoot . DefaultParam::NewsImageContainer . $updatedNews["image"];
+                return $this->dataReturn->jsonData($updatedNews);
+            }
+
+            return $this->dataReturn->errorMessage("The news was not updated");
         }
+
+        return $this->dataReturn->errorMessage("Access Denied");
     }
 
 
     public function deleteNews($newsId)
     {
-        if ($this->newsService->removeNews($newsId)) {
-            print_r("true");
+        if ($this->authenticationService->isTokenCorrect()) {
+
+            if ($this->newsService->removeNews($newsId)) {
+                return $this->dataReturn->jsonData(["id"=>$newsId]);
+            }
+            else {
+                return $this->dataReturn->errorMessage("The news was not removed. Please try again");
+            }
         }
-        else {
-            print_r("false");
-        }
+
+        return $this->dataReturn->errorMessage("Access denied");
     }
 
 }

@@ -29,6 +29,7 @@ class NewsService implements NewsServiceInterface
                   id,
                   title,
                   date,
+                  author,
                   body,
                   image 
                   FROM news WHERE active = ?";
@@ -48,6 +49,7 @@ class NewsService implements NewsServiceInterface
                   id,
                   title,
                   date,
+                  author,
                   body,
                   image 
                   FROM news
@@ -57,7 +59,7 @@ class NewsService implements NewsServiceInterface
 
         $stmt->execute([$id]);
 
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetch();
 
         return $result;
     }
@@ -67,6 +69,7 @@ class NewsService implements NewsServiceInterface
                   id,
                   title,
                   date,
+                  author,
                   body,
                   image 
                   FROM news WHERE unique_str_code = ? AND active = ?";

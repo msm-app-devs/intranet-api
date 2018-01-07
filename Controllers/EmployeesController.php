@@ -6,7 +6,6 @@ namespace Employees\Controllers;
 
 use Employees\Models\Binding\Emp\EmpBindingModel;
 use Employees\Services\AuthenticationServiceInterface;
-use Employees\Services\CreatingQueryServiceInterface;
 use Employees\Services\EmployeesServiceInterface;
 use Employees\Services\EncryptionServiceInterface;
 use Employees\Services\ImageFromBinServiceInterface;
@@ -18,21 +17,18 @@ class EmployeesController
 
     private $employeeService;
     private $encryptionService;
-    private $createQuery;
     private $authenticationService;
     private $binaryImage;
     private $dataReturn;
 
     public function __construct(EmployeesServiceInterface $employeesService,
                                 EncryptionServiceInterface $encryptionService,
-                                CreatingQueryServiceInterface $createQuery,
                                 AuthenticationServiceInterface $authenticationService,
                                 ImageFromBinServiceInterface $binService,
                                 DataReturnInterface $dataReturn)
     {
         $this->employeeService = $employeesService;
         $this->encryptionService = $encryptionService;
-        $this->createQuery = $createQuery;
         $this->authenticationService = $authenticationService;
         $this->binaryImage = $binService;
         $this->dataReturn = $dataReturn;
@@ -45,9 +41,6 @@ class EmployeesController
 
     public function list($active = null)
     {
-
-        //if ($this->authenticationService->isTokenCorrect()) {
-
             if ($active == null) {
 
                 $list = $this->employeeService->getListStatus("yes");
@@ -57,18 +50,17 @@ class EmployeesController
                 $list =  $this->employeeService->getEmp($active);
 
             }
+
         if (is_array($list)) {
 
-        foreach ($list as $key => $value) {
+            foreach ($list as $key => $value) {
 
-            if (array_key_exists("image", $list[$key])) {
-                $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$list[$key]["image"];
+                if (array_key_exists("image", $list[$key])) {
+                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$list[$key]["image"];
+                }
             }
         }
-    }
-//        print_r(json_encode(array("employee" => $list)));
-        $this->dataReturn->jsonDataReturn($list);
-        //}
+        return $this->dataReturn->jsonData($list);
 
     }
 
@@ -76,13 +68,13 @@ class EmployeesController
          if ($this->authenticationService->isTokenCorrect()) {
 
             if ($this->employeeService->removeEmp($id)) {
-                print_r("true");
+                return $this->dataReturn->jsonData(["id"=>$id]);
             } else {
-                print_r("false");
+                return $this->dataReturn->errorMessage("The employee was not removed. Please try again");
             }
-         } else {
-             http_response_code("404");
          }
+
+        return $this->dataReturn->errorMessage("Access denied");
     }
 
 
@@ -93,7 +85,6 @@ class EmployeesController
 //        exit;
         if ($this->authenticationService->isTokenCorrect()) {
 
-
         $md5string = $this->encryptionService->md5generator($employeeBindingModel->getFirstName().
             $employeeBindingModel->getLastName().
             $employeeBindingModel->getBirthday().time());
@@ -103,24 +94,27 @@ class EmployeesController
                 if ($this->employeeService->addEmp($employeeBindingModel, $md5string)) {
                     $empArrray = $this->employeeService->getEmpByStrId($md5string);
                     $empArrray["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$empArrray['image'];
-                    print_r(json_encode(array("employees" =>$empArrray)));
+
+                    return $this->dataReturn->jsonData($empArrray);
+
                 } else {
                     $this->binaryImage->removeImage(DefaultParam::EmployeeContainer.$md5string.".jpg");
-                    print_r("Add new employee failed");
+                    return $this->dataReturn->errorMessage("Add new employee failed");
                 }
             } else {
-                    print_r("Image upload failed");
+                    return $this->dataReturn->errorMessage("Image upload failed");
             }
-        } else {
-            http_response_code("404");
         }
-    }
 
-    public function getemployee($id) {
-
-        print_r(json_encode($this->employeeService->getEmp($id)));
+        return $this->dataReturn->errorMessage("Access denied");
 
     }
+
+    public function getemployee($id)
+    {
+        return $this->dataReturn->jsonData($this->employeeService->getEmp($id));
+    }
+
 
     public function updateemployee($theid, EmpBindingModel $empBindingModel)
     {
@@ -131,33 +125,39 @@ class EmployeesController
             $employee = $this->employeeService->getEmp($theid);
             $oldImage = $employee["image"];
 
-            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/",$empBindingModel->getImage()) > 0 ? true : false;
+            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/", $empBindingModel->getImage()) > 0 ? true : false;
 
-                if ($isBinaryImage) {
+            if ($isBinaryImage) {
 
-                    $md5string = $this->encryptionService->md5generator($empBindingModel->getFirstName().
-                        $empBindingModel->getLastName().
-                        $empBindingModel->getBirthday().time());
+                $md5string = $this->encryptionService->md5generator($empBindingModel->getFirstName() .
+                    $empBindingModel->getLastName() .
+                    $empBindingModel->getBirthday() . time());
 
-                        $this->binaryImage->createImage($empBindingModel->getImage(),DefaultParam::EmployeeContainer, $md5string, "jpg");
-                        $empBindingModel->setImage($md5string.".jpg");
-                }
+                $this->binaryImage->createImage($empBindingModel->getImage(), DefaultParam::EmployeeContainer, $md5string, "jpg");
+                $empBindingModel->setImage($md5string . ".jpg");
+            } else {
+                $empBindingModel->setImage($oldImage);
+                //$empBindingModel->setImage(str_replace(DefaultParam::EmployeeContainer,"",$empBindingModel->getImage()));
+            }
 
 
             if ($this->employeeService->updEmp($empBindingModel)) {
                 if ($isBinaryImage) {
-                    $this->binaryImage->removeImage(DefaultParam::EmployeeContainer.$oldImage);
+                    $this->binaryImage->removeImage(DefaultParam::EmployeeContainer . $oldImage);
                 }
-                $updatedEmployee = $this->employeeService->getEmp($empBindingModel->getId());
-                $updatedEmployee["image"] = DefaultParam::ServerRoot.DefaultParam::EmployeeContainer.$updatedEmployee["image"];
-                print_r(json_encode(array("employees" => $updatedEmployee)));
-            } else {
-                print_r("false");
-            }
 
-           } else {
-            http_response_code("404");
+                $updatedEmployee = $this->employeeService->getEmp($empBindingModel->getId());
+
+                $updatedEmployee["image"] = DefaultParam::ServerRoot . DefaultParam::EmployeeContainer . $updatedEmployee["image"];
+                //                print_r(json_encode(array("employees" => $updatedEmployee)));
+
+                return $this->dataReturn->jsonData($updatedEmployee);
+
+            }
+            return $this->dataReturn->errorMessage("The update was unsuccessful");
+
         }
+            return $this->dataReturn->errorMessage("Access denied");
     }
 
 }
