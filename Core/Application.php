@@ -28,6 +28,7 @@ class Application
         $implementationName = get_class($instance); // Vseki obekt koito e instanciran s new, tuk shte vyrne imeto na class-a kato string
         $this->dependencies[$interfaceName] = $implementationName;
         $this->resolvedDependencies[$implementationName] = $instance;
+
     }
 
     public function __construct(MVCContextInterface $mvcContext)
@@ -96,9 +97,7 @@ class Application
         }
         $refClass = new \ReflectionClass($className);
         $constructor = $refClass->getConstructor();
-
         if ($constructor === null) { // nqma argumenti koito sa mu neobhodimi i moje da se napravi direktna instanciq
-
             $instance = new $className();
             return $instance;
         }

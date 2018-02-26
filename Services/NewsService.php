@@ -50,8 +50,7 @@ class NewsService implements NewsServiceInterface
                   title,
                   date,
                   author,
-                  body,
-                  image 
+                  body 
                   FROM news
                   WHERE id = ?";
 
@@ -106,7 +105,7 @@ class NewsService implements NewsServiceInterface
             $newsBindingModel->getDate(),
             $newsBindingModel->getAuthor(),
             $newsBindingModel->getTitle(),
-            "TEST",
+            $newsBindingModel->getBody(),
 //            $newsBindingModel->getBody(),
             $newsBindingModel->getImage(),
             $uniqueStr
@@ -118,13 +117,13 @@ class NewsService implements NewsServiceInterface
         $arr = [
             "author"=>$bindingModel->getAuthor(),
             "title"=>$bindingModel->getTitle(),
-            "body"=>$bindingModel->getBody(),
-            "image"=>$bindingModel->getImage()
+            "date"=>$bindingModel->getDate(),
+            "body"=>$bindingModel->getBody()
         ];
 
         $createQuery = new CreatingQueryService();
         $createQuery->setValues($arr);
-        $createQuery->setQueryUpdateEmp($bindingModel->getId());
+        $createQuery->setQueryUpdateEmp($bindingModel->getId(), "id = ?");
 
         $query = "UPDATE news SET ".$createQuery->getQuery();
 

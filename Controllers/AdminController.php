@@ -10,6 +10,7 @@ namespace Employees\Controllers;
 
 
 
+use Employees\Core\DataReturnInterface;
 use Employees\Core\MVC\KeyHolder;
 use Employees\Models\Binding\Users\UserLoginBindingModel;
 use Employees\Services\AuthenticationServiceInterface;
@@ -22,14 +23,17 @@ class AdminController
     private $userService;
     private $authenticationService;
     private $responseService;
+    private $dataReturn;
 
     public function __construct(UserServiceInterface $userService,
                                 AuthenticationServiceInterface $authenticationService,
-                                ResponseServiceInterface $responseService)
+                                ResponseServiceInterface $responseService,
+                                DataReturnInterface $dataReturn)
     {
         $this->authenticationService = $authenticationService;
         $this->userService = $userService;
         $this->responseService = $responseService;
+        $this->dataReturn = $dataReturn;
     }
 
     public function token(UserLoginBindingModel $bindingModel) {
@@ -46,17 +50,15 @@ class AdminController
 
                 if ($this->userService->userToken(1, $token)) {
 
-                    print_r(json_encode(array("access_token" => $token)));
+                  return $this->dataReturn->tokenReturn(array("access_token" => $token));
 
                 }
 
-            } else {
-                print_r(json_encode(array("access_token" => "")));
             }
 
+            return $this->dataReturn->accessDenied(401, "Login was unsuccessfull. Please check your username and password.");
 
 
-        //throw new \Exception();
      }
 
 

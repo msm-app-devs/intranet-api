@@ -25,7 +25,7 @@ class CreatingQueryService implements CreatingQueryServiceInterface
 //    }
 
 
-    public function setQueryUpdateEmp($theId) {
+    public function setQueryUpdateEmp($theId, $whereFilter) {
 
         $str = "";
 
@@ -38,7 +38,7 @@ class CreatingQueryService implements CreatingQueryServiceInterface
         }
         $this->arrayValues[] = $theId;
         $this->query = substr($str, 0, strlen($str)-2);
-        $this->query .= " WHERE id = ?";
+        $this->query .= " WHERE ".$whereFilter;
     }
 
     public function getQuery(): string

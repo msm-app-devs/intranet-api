@@ -13,5 +13,9 @@ interface DataReturnInterface
 {
     public function jsonData($theData);
 
-    public function errorMessage($message);
+    public function tokenReturn($token);
+
+    public function errorResponse($status, $message=null);
+
+    public function accessDenied($status, $message = null);
 }

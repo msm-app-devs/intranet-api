@@ -47,23 +47,44 @@ class EmployeesService implements EmployeesServiceInterface
     }
 
 
-    public function getListStatus($active)
+    public function getListStatus($active, $id = null)
     {
         $query = "SELECT 
-                  id, 
-                  ext_id AS extId,
-                  first_name AS firstName,
-                  last_name AS lastName,
-                  position,
-                  team,
-                  start_date AS dateStart,
-                  birthday,
-                  image 
+                  employees.id,
+                  employees.ext_id AS extId,
+                  employees.first_name AS firstName,
+                  employees.last_name AS lastName,
+                  employees.position,
+                  employees.team,
+                  employees.start_date AS dateStart,
+                  employees.birthday,
+                  employees.image,
+                  employees.avatar, 
+                  employees.photo, 
+                  employees_add_info.education,
+                  employees_add_info.expertise,
+                  employees_add_info.languages,
+                  employees_add_info.hobbies,
+                  employees_add_info.song,
+                  employees_add_info.thought,
+                  employees_add_info.book,
+                  employees_add_info.skype,
+                  employees_add_info.book,
+                  employees_add_info.email 
                   FROM employees 
-                  WHERE active = ?";
+                  INNER JOIN employees_add_info 
+                  WHERE employees.unique_str_code = employees_add_info.unique_str_code AND employees.active = ?";
+
+
+        $valuesArr = [$active];
+
+        if ($id !== null) {
+             $query .=" AND employees.id = ?";
+             array_push($valuesArr, $id);
+        }
 
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$active]);
+        $stmt->execute($valuesArr);
 
         $result = $stmt->fetchAll();
 
@@ -72,16 +93,30 @@ class EmployeesService implements EmployeesServiceInterface
 
     public function getEmp($id) {
         $query = "SELECT 
-                  id,
-                  ext_id AS extId,
-                  first_name AS firstName,
-                  last_name AS lastName,
-                  position,
-                  team,
-                  start_date AS dateStart,
-                  birthday,
-                  image 
-                  FROM employees WHERE id = ?";
+                  employees.id,
+                  employees.ext_id AS extId,
+                  employees.first_name AS firstName,
+                  employees.last_name AS lastName,
+                  employees.position,
+                  employees.team,
+                  employees.start_date AS dateStart,
+                  employees.birthday,
+                  employees.image,
+                  employees.avatar,
+                  employees.photo,
+                  employees_add_info.education,
+                  employees_add_info.expertise,
+                  employees_add_info.languages,
+                  employees_add_info.hobbies,
+                  employees_add_info.song,
+                  employees_add_info.thought,
+                  employees_add_info.book,
+                  employees_add_info.skype,
+                  employees_add_info.book,
+                  employees_add_info.email 
+                  FROM employees 
+                  INNER JOIN employees_add_info 
+                  WHERE employees.unique_str_code = employees_add_info.unique_str_code AND employees.id = ?";
 
         $stmt = $this->db->prepare($query);
         $stmt->execute([$id]);
@@ -94,27 +129,41 @@ class EmployeesService implements EmployeesServiceInterface
 
     public function getEmpByStrId($strId) {
         $query = "SELECT 
-                  id,
-                  ext_id AS extId,
-                  first_name AS firstName,
-                  last_name AS lastName,
-                  position,
-                  team,
-                  start_date AS dateStart,
-                  birthday,
-                  image 
-                  FROM employees WHERE unique_str_code = ? AND active = ?";
+                  employees.id,
+                  employees.ext_id AS extId,
+                  employees.first_name AS firstName,
+                  employees.last_name AS lastName,
+                  employees.position,
+                  employees.team,
+                  employees.start_date AS dateStart,
+                  employees.birthday,
+                  employees.image,
+                  employees.avatar, 
+                  employees.photo, 
+                  employees_add_info.education,
+                  employees_add_info.expertise,
+                  employees_add_info.hobbies,
+                  employees_add_info.song,
+                  employees_add_info.thought,
+                  employees_add_info.book,
+                  employees_add_info.skype,
+                  employees_add_info.book,
+                  employees_add_info.email 
+                  FROM employees 
+                  INNER JOIN employees_add_info 
+                  WHERE employees.unique_str_code = employees_add_info.unique_str_code AND employees.unique_str_code = ? AND employees.active = ?";
 
         $stmt = $this->db->prepare($query);
 
-        $stmt->execute([$strId, "yes"]);
+        $stmt->execute([$strId,"yes"]);
         $result = $stmt->fetch();
 
         return $result;
     }
 
-    public function addEmp(EmpBindingModel $model, $uniqueStrId)
+        public function addEmp(EmpBindingModel $model, $uniqueStrId)
     {
+
         $query = "INSERT INTO 
                   employees (
                   first_name,
@@ -124,22 +173,72 @@ class EmployeesService implements EmployeesServiceInterface
                   start_date,
                   birthday,
                   image,
+                  avatar,
+                  photo, 
                   active,
                   unique_str_code
                   )
-                  VALUES (?,?,?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?,?,?,?,?); 
+                  INSERT INTO 
+                   employees_add_info (
+                            education,
+                            expertise,
+                            languages,
+                            hobbies,
+                            song,
+                            thought,
+                            book,
+                            skype,
+                            email,
+                            unique_str_code 
+                   ) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
-
+//        $arrr = [
+//            $model->getFirstName(),
+//            $model->getLastName(),
+//            $model->getPosition(),
+//            $model->getTeam(),
+//            $model->getDateStart(),
+//            $model->getBirthday(),
+//            $model->getImage(),
+//            $model->getAvatar(),
+//            $model->getPhoto(),
+//            $model->getActive(),
+//            $uniqueStrId,
+//            $model->getEducation(),
+//            $model->getExpertise(),
+//            $model->getLanguages(),
+//            $model->getHobbies(),
+//            $model->getSong(),
+//            $model->getThought(),
+//            $model->getBook(),
+//            $model->getSkype(),
+//            $model->getEmail(),
+//            $uniqueStrId];
+//        var_dump($arrr);
+//        exit;
         return $stmt->execute([
             $model->getFirstName(),
             $model->getLastName(),
             $model->getPosition(),
             $model->getTeam(),
-            $model->getStartDate(),
+            $model->getDateStart(),
             $model->getBirthday(),
             $model->getImage(),
+            $model->getAvatar(),
+            $model->getPhoto(),
             $model->getActive(),
+            $uniqueStrId,
+            $model->getEducation(),
+            $model->getExpertise(),
+            $model->getLanguages(),
+            $model->getHobbies(),
+            $model->getSong(),
+            $model->getThought(),
+            $model->getBook(),
+            $model->getSkype(),
+            $model->getEmail(),
             $uniqueStrId
         ]);
 
@@ -154,21 +253,43 @@ class EmployeesService implements EmployeesServiceInterface
             "last_name"=>$empBindingModel->getLastName(),
             "position"=>$empBindingModel->getPosition(),
             "team"=>$empBindingModel->getTeam(),
-            "start_date"=>$empBindingModel->getStartDate(),
+            "start_date"=>$empBindingModel->getDateStart(),
             "birthday"=>$empBindingModel->getBirthday(),
             "image" => $empBindingModel->getImage(),
+            "photo" => $empBindingModel->getPhoto(),
+            "avatar" => $empBindingModel->getAvatar(),
             "active"=>$empBindingModel->getActive()
+        ];
+
+        $updateAddInfo = [
+            "education" => $empBindingModel->getEducation(),
+            "expertise" => $empBindingModel->getExpertise(),
+            "languages" => $empBindingModel->getLanguages(),
+            "hobbies" => $empBindingModel->getHobbies(),
+            "song" => $empBindingModel->getSong(),
+            "thought" => $empBindingModel->getThought(),
+            "book" => $empBindingModel->getBook(),
+            "skype" => $empBindingModel->getSkype(),
+            "email" => $empBindingModel->getEmail()
         ];
 
 
         $createQuery = new CreatingQueryService();
         $createQuery->setValues($updatePropArray);
-        $createQuery->setQueryUpdateEmp($empBindingModel->getId());
+        $createQuery->setQueryUpdateEmp($empBindingModel->getId(), "id = ?");
+
+        $createQuery2 = new CreatingQueryService();
+        $createQuery2->setValues($updateAddInfo);
+        $createQuery2->setQueryUpdateEmp($empBindingModel->getId(), "emp_id = ?");
 
         $query = "UPDATE employees SET ".$createQuery->getQuery();
+        $query2 = "UPDATE employees_add_info SET ".$createQuery2->getQuery();
 
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute($createQuery->getValues());
+
+
+        $stmt = $this->db->prepare($query.";".$query2.";");
+
+        return $stmt->execute(array_merge($createQuery->getValues(),$createQuery2->getValues()));
 
     }
 
@@ -183,6 +304,19 @@ class EmployeesService implements EmployeesServiceInterface
         $stmt = $this->db->prepare($query);
 
         return $stmt->execute(["no",$empId]);
+    }
+
+    public function updateAddInfoId($key, $empId)
+    {
+        $query = "UPDATE 
+                  employees_add_info
+                  SET 
+                  emp_id = ?  
+                  WHERE unique_str_code = ?";
+
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute([$empId, $key]);
     }
 
 

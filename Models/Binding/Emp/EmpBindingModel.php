@@ -18,9 +18,20 @@ class EmpBindingModel
     private $lastName;
     private $position;
     private $team;
-    private $startDate;
+    private $dateStart;
     private $birthday;
     private $image;
+    private $avatar;
+    private $photo;
+    private $education;
+    private $expertise;
+    private $languages;
+    private $hobbies;
+    private $song;
+    private $thought;
+    private $book;
+    private $skype;
+    private $email;
     private $active = "yes";
 
     /**
@@ -123,18 +134,20 @@ class EmpBindingModel
     /**
      * @return mixed
      */
-    public function getStartDate()
+    public function getDateStart()
     {
-        return $this->startDate;
+        return $this->dateStart;
     }
 
     /**
-     * @param mixed $startDate
+     * @param mixed $dateStart
      */
-    public function setStartDate($startDate)
+    public function setDateStart($dateStart)
     {
-        $this->startDate = $startDate;
+        $this->dateStart = $dateStart;
     }
+
+
 
     /**
      * @return mixed
@@ -183,6 +196,183 @@ class EmpBindingModel
     {
         $this->active = $active;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEducation()
+    {
+        return $this->education;
+    }
+
+    /**
+     * @param mixed $education
+     */
+    public function setEducation($education)
+    {
+        $this->education = $education;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpertise()
+    {
+        return $this->expertise;
+    }
+
+    /**
+     * @param mixed $expertise
+     */
+    public function setExpertise($expertise)
+    {
+        $this->expertise = $expertise;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+
+    /**
+     * @param mixed $languages
+     */
+    public function setLanguages($languages)
+    {
+        $this->languages = $languages;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHobbies()
+    {
+        return $this->hobbies;
+    }
+
+    /**
+     * @param mixed $hobbies
+     */
+    public function setHobbies($hobbies)
+    {
+        $this->hobbies = $hobbies;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSong()
+    {
+        return $this->song;
+    }
+
+    /**
+     * @param mixed $song
+     */
+    public function setSong($song)
+    {
+        $this->song = $song;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getThought()
+    {
+        return $this->thought;
+    }
+
+    /**
+     * @param mixed $thought
+     */
+    public function setThought($thought)
+    {
+        $this->thought = $thought;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBook()
+    {
+        return $this->book;
+    }
+
+    /**
+     * @param mixed $book
+     */
+    public function setBook($book)
+    {
+        $this->book = $book;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkype()
+    {
+        return $this->skype;
+    }
+
+    /**
+     * @param mixed $skype
+     */
+    public function setSkype($skype)
+    {
+        $this->skype = $skype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param mixed $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    }
+
 
 
 

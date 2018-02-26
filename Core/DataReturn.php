@@ -9,9 +9,9 @@
 namespace Employees\Core;
 
 
-use Employees\Config\DefaultParam;
+
 use Employees\Core\MVC\MVCContextInterface;
-use function PHPSTORM_META\type;
+
 
 class DataReturn implements DataReturnInterface
 {
@@ -26,13 +26,30 @@ class DataReturn implements DataReturnInterface
 
     public function jsonData($theData)
     {
+
         print_r(json_encode(array($this->mvcContext->getController() => $theData)));
     }
 
-    public function errorMessage($message)
+    public function tokenReturn($token)
     {
-        print_r($message);
-//        http_response_code("404");
+        print_r(json_encode($token));
+    }
+
+    //304 Not Modified
+    //401 Unauthorized
+    public function errorResponse($status, $message = null)
+    {
+
+        http_response_code($status);
+        if ($message) {
+            print_r('{"errors":[{"status": "'.$status.'","title": "'.$message.'": "Cannot POST /posts"}]}');
+        }
+    }
+
+    public function accessDenied($status, $message = null)
+    {
+        http_response_code($status);
+        print_r(json_encode(array("access_token" => "", "errors" => array("status"=>$status, "title"=>$message, "message"=>"Cannot login!"))));
     }
 
 

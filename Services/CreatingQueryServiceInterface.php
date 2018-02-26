@@ -11,7 +11,7 @@ namespace Employees\Services;
 
 interface CreatingQueryServiceInterface
 {
-    public function setQueryUpdateEmp($theId);
+    public function setQueryUpdateEmp($theId, $whereFilter);
 
     public function getQuery() : string;
 

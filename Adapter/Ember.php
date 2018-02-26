@@ -14,8 +14,7 @@ class Ember
     private static $methods = ["employees" =>
                                 array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
                                "news" =>
-                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option"),
-                                "admin" => array("POST"=>"token", "OPTIONS" => "option")
+                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option")
                                 ];
 
     private $theController;
@@ -29,14 +28,13 @@ class Ember
         $this->theController = $controller;
         $this->theMethod = $method;
 
-        if ($this->theController == "token") {
+        if ($this->theController == "admin") {
             $this->theController = "admin";
             $this->theMethod = "token";
         }
         else if (count($_POST) > 0) {
 
-        }
-        else {
+        } else {
 //            parse_str(file_get_contents("php://input"), $this->phpInput);
             if ($this->theMethod === "PUT" || $this->theMethod === "POST") {
                         $this->phpInput = json_decode(file_get_contents("php://input"), true);
@@ -55,7 +53,7 @@ class Ember
     }
 
     private function customCheck() {
-        if ($this->theController == "token") {
+        if ($this->theController == "admin") {
             $this->theController = "admin";
             $this->theMethod = "token";
         }

@@ -84,19 +84,29 @@ class NewsController
                     return $this->dataReturn->jsonData($newsList);
 
                 } else {
+
                     $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$md5string.".png");
-                    return $this->dataReturn->errorMessage("Add news failed");
+
+                    return $this->dataReturn->errorResponse(400, "Add news failed");
                 }
             } else {
-                return $this->dataReturn->errorMessage("Image upload failed");
+
+
+                return $this->dataReturn->errorResponse(400, "Image upload failed");
             }
         }
 
-        return $this->dataReturn->errorMessage("Access Denied");
+        return $this->dataReturn->errorResponse(401);
     }
 
     public function updateNews($theId,NewsBindingModel $bindingModel)
     {
+
+
+//        $str = '{"errors":[{"status": "404","title": "sklfksdkljfklsdf": "Cannot POST /posts"}]}';
+//        http_response_code("304");
+//        //print_r($str);
+//        exit;
         if ($this->authenticationService->isTokenCorrect()) {
 
             $bindingModel->setId($theId);
@@ -123,14 +133,14 @@ class NewsController
                     $this->binaryImage->removeImage(DefaultParam::NewsImageContainer . $oldImage);
                 }
                 $updatedNews = $this->newsService->getNews($bindingModel->getId());
-                $updatedNews["image"] = DefaultParam::ServerRoot . DefaultParam::NewsImageContainer . $updatedNews["image"];
+               // $updatedNews["image"] = DefaultParam::ServerRoot . DefaultParam::NewsImageContainer . $updatedNews["image"];
                 return $this->dataReturn->jsonData($updatedNews);
             }
 
-            return $this->dataReturn->errorMessage("The news was not updated");
+            return $this->dataReturn->errorResponse(400, "The news was not updated");
         }
 
-        return $this->dataReturn->errorMessage("Access Denied");
+        return $this->dataReturn->errorResponse(401);
     }
 
 
@@ -142,11 +152,16 @@ class NewsController
                 return $this->dataReturn->jsonData(["id"=>$newsId]);
             }
             else {
-                return $this->dataReturn->errorMessage("The news was not removed. Please try again");
+                return $this->dataReturn->errorResponse(400,"The news was not removed. Please try again");
             }
         }
 
-        return $this->dataReturn->errorMessage("Access denied");
+        return $this->dataReturn->errorResponse(401);
+    }
+
+    public function uploadImage()
+    {
+        var_dump($_FILES);
     }
 
 }

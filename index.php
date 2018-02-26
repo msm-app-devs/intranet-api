@@ -38,6 +38,7 @@ header('Content-Type: application/json; charset=utf-8');
 //}
 //exit;
 
+
 spl_autoload_register(function($class){
     $class = str_replace("Employees\\","", $class);
     $class = str_replace("\\",DIRECTORY_SEPARATOR, $class);
