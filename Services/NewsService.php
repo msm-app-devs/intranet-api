@@ -32,7 +32,8 @@ class NewsService implements NewsServiceInterface
                   author,
                   body,
                   image 
-                  FROM news WHERE active = ?";
+                  FROM news WHERE active = ? 
+                  ORDER BY date DESC";
 
         $stmt = $this->db->prepare($query);
 
@@ -92,10 +93,9 @@ class NewsService implements NewsServiceInterface
                   author,
                   title,
                   body,
-                  image, 
                   unique_str_code
                   ) 
-                  VALUES (?,?,?,?,?,?,?,?)";
+                  VALUES (?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -107,7 +107,6 @@ class NewsService implements NewsServiceInterface
             $newsBindingModel->getTitle(),
             $newsBindingModel->getBody(),
 //            $newsBindingModel->getBody(),
-            $newsBindingModel->getImage(),
             $uniqueStr
         ]);
     }

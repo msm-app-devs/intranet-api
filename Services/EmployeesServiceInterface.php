@@ -15,7 +15,7 @@ interface EmployeesServiceInterface
 {
 
     public function getList();
-
+    
     public  function getListStatus($active, $id=null);
 
     public function addEmp(EmpBindingModel $model, $uniqueStrId);

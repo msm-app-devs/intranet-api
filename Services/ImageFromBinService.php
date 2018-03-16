@@ -51,7 +51,7 @@ class ImageFromBinService implements ImageFromBinServiceInterface
             }
 
         }
-
+        
         return false;
     }
 

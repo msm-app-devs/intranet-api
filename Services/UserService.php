@@ -29,7 +29,7 @@ class UserService implements UserServiceInterface
         $this->encryptionService = $encryptionService;
     }
 
-    public function login($username, $password) : bool
+    public function login($username, $password)
     {
 
         $query = "SELECT 
@@ -49,12 +49,12 @@ class UserService implements UserServiceInterface
 
 
 
-        if ($user == null) {
+        if ($user) {
+
+            return $user;
+        }
 
             return false;
-        }
-        else {
-            return true;
 //            $hash = $user->getPassword();
 //
 //            if ($this->encryptionService->verify($password, $hash)) {
@@ -64,7 +64,7 @@ class UserService implements UserServiceInterface
 //
 //                return false;
 //            }
-        }
+
 
 
     }

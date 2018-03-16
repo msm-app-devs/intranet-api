@@ -47,7 +47,7 @@ class EmployeesService implements EmployeesServiceInterface
     }
 
 
-    public function getListStatus($active, $id = null)
+    public function getListStatus($active, $id=null)
     {
         $query = "SELECT 
                   employees.id,
@@ -74,7 +74,6 @@ class EmployeesService implements EmployeesServiceInterface
                   FROM employees 
                   INNER JOIN employees_add_info 
                   WHERE employees.unique_str_code = employees_add_info.unique_str_code AND employees.active = ?";
-
 
         $valuesArr = [$active];
 
