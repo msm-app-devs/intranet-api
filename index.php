@@ -7,7 +7,7 @@ use Employees\Adapter\Ember;
 use Employees\Core\MVC\KeyHolder;
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE');
 //header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin');
 header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization');
 //header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Origin, X-Auth-Token, authorization');
@@ -44,6 +44,8 @@ spl_autoload_register(function($class){
     $class = str_replace("\\",DIRECTORY_SEPARATOR, $class);
 
     require_once $class . '.php';
+
+
 });
 
 
@@ -82,7 +84,6 @@ $theMethod = new Ember(array_shift($args), $requestMethod);
 $controllerName = $theMethod->getController();
 count($args) > 0 ? array_push($arguments,array_shift($args)) : $arguments ;
 $actionName = $theMethod->getMethod();
-
 
 
 //$actionName = array_shift($args);
@@ -184,6 +185,10 @@ $app->registerDependency(\Employees\Services\ImageFromBinServiceInterface::class
 
 $app->registerDependency(\Employees\Core\DataReturnInterface::class,
     \Employees\Core\DataReturn::class
+    );
+
+$app->registerDependency(\Employees\Services\BenefitsServiceInterface::class,
+    \Employees\Services\BenefitsService::class
     );
 
 $app->start();
