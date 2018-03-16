@@ -11,10 +11,16 @@ namespace Employees\Adapter;
 
 class Ember
 {
-    private static $methods = ["employees" =>
-                                array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
+    private static $methods = ["admin" =>
+                                    array("GET"=>"", "POST"=>"token","PUT"=>"", "DELETE"=>"", "OPTIONS" => "option"),
+                               "employees" =>
+                                    array("GET"=>"list", "POST"=>"addemployee","PUT"=>"updateemployee", "DELETE"=>"removeemployee", "OPTIONS" => "option"),
                                "news" =>
-                               array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option")
+                                    array("GET"=>"getNews", "POST" => "addnews", "PUT" => "updatenews", "DELETE"=>"deletenews", "OPTIONS" => "option"),
+                                "benefits" =>
+                                    array("GET"=>"list", "POST" => "", "PUT" => "", "DELETE"=>"", "OPTIONS" => "option"),
+                                "files" =>
+                                    array("GET"=>"list", "POST" => "", "PUT" => "", "DELETE"=>"", "OPTIONS" => "option")
                                 ];
 
     private $theController;
@@ -28,13 +34,15 @@ class Ember
         $this->theController = $controller;
         $this->theMethod = $method;
 
-        if ($this->theController == "admin") {
-            $this->theController = "admin";
-            $this->theMethod = "token";
-        }
-        else if (count($_POST) > 0) {
-
-        } else {
+//        if ($this->theController == "admin") {
+//            $this->theController = "admin";
+//            $this->theMethod = "token";
+//        }
+//        else if (count($_POST) > 0) {
+//        if (count($_POST) > 0) {
+//
+//        } else {
+            if (count($_POST) === 0) {
 //            parse_str(file_get_contents("php://input"), $this->phpInput);
             if ($this->theMethod === "PUT" || $this->theMethod === "POST") {
                         $this->phpInput = json_decode(file_get_contents("php://input"), true);
@@ -46,17 +54,9 @@ class Ember
                     $_POST = $this->phpInput[$this->theController];
                 }
 
-
             }
         }
 
-    }
-
-    private function customCheck() {
-        if ($this->theController == "admin") {
-            $this->theController = "admin";
-            $this->theMethod = "token";
-        }
     }
 
     public function getController() {
@@ -67,11 +67,11 @@ class Ember
 
     public function getMethod() {
 
-        if ($this->theMethod == "token") {
-            return "token";
-        } else {
-            return self::$methods[$this->theController][$this->theMethod];
-        }
-
+//        if ($this->theMethod == "token") {
+//            return "token";
+//        } else {
+//            return self::$methods[$this->theController][$this->theMethod];
+//        }
+        return self::$methods[$this->theController][$this->theMethod];
     }
 }
