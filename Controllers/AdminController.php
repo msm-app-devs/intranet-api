@@ -44,11 +44,11 @@ class AdminController
 
             $admin = $this->userService->login($username, $password);
 
-            if ($admin != null) {
+            if ($admin) {
 
                 $token = bin2hex(openssl_random_pseudo_bytes(64));
 
-                if ($this->userService->userToken(1, $token)) {
+                if ($this->userService->userToken($admin->getId(), $token)) {
 
                   return $this->dataReturn->tokenReturn(array("access_token" => $token));
 

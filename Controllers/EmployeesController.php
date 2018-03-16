@@ -39,10 +39,9 @@ class EmployeesController
 
     }
 
+
     public function list($active = null)
     {
-//        $list =  $this->employeeService->getListStatus("yes", 100);
-
             if ($active == null) {
 
                 $list = $this->employeeService->getListStatus("yes");
@@ -52,6 +51,7 @@ class EmployeesController
                 $list =  $this->employeeService->getListStatus("yes", $active);
 
             }
+
 
         if (is_array($list)) {
 
@@ -68,6 +68,10 @@ class EmployeesController
                 }
             }
         }
+
+//        var_dump(json_encode($list[5]));
+//        var_dump(json_encode($this->utf8ize($list)));
+//            exit;
 
         return $this->dataReturn->jsonData($list);
 

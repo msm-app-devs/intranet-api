@@ -42,20 +42,36 @@ class NewsController
 
     }
 
+    private function utf8ize($d) {
+        if (is_array($d)) {
+            foreach ($d as $k => $v) {
+                if (is_array($d[$k])) {
+                    $d[$k] = $this->utf8ize($d[$k]);
+                } else {
+                    $d[$k] = $this->utf8ize($v);
+                }
+            }
+        } else if (is_string ($d)) {
+            return utf8_encode($d);
+        }
+        return $d;
+    }
+
     public function getNews()
     {
 
         $list = $this->newsService->getAllNews("yes");
-        if (is_array($list)) {
 
-            foreach ($list as $key => $value) {
 
-                if (array_key_exists("image", $list[$key])) {
-                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$list[$key]["image"];
-                }
-            }
-        }
-
+//        if (is_array($list)) {
+//
+//            foreach ($list as $key => $value) {
+//
+//                if (array_key_exists("image", $list[$key])) {
+//                    $list[$key]["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$list[$key]["image"];
+//                }
+//            }
+//        }
         return $this->dataReturn->jsonData($list);
     }
 
@@ -67,33 +83,32 @@ class NewsController
             $author = $this->authenticationService->getUserInfo();
             $now = date("d/m/y");
 
-            $bindingModel->setDate($now);
+//            $bindingModel->setDate($now);
             //$bindingModel->setAuthor($author["first"] . " " . $author["last"]);
             $bindingModel->setAdminId($author["id"]);
 
-
             $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle() . $bindingModel->getBody());
 
-            if ($this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png")) {
+//            if ($this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png")) {
+//
+//                $bindingModel->setImage($md5string . ".png");
 
-                $bindingModel->setImage($md5string . ".png");
+            if ($this->newsService->addNews($bindingModel, $md5string)) {
+                $newsList = $this->newsService->getNewsByStrId($md5string);
+//                $newsList["image"] = DefaultParam::ServerRoot . DefaultParam::NewsImageContainer . $newsList['image'];
+                return $this->dataReturn->jsonData($newsList);
 
-                if ($this->newsService->addNews($bindingModel, $md5string)) {
-                    $newsList = $this->newsService->getNewsByStrId($md5string);
-                    $newsList["image"] = DefaultParam::ServerRoot.DefaultParam::NewsImageContainer.$newsList['image'];
-                    return $this->dataReturn->jsonData($newsList);
-
-                } else {
-
-                    $this->binaryImage->removeImage(DefaultParam::NewsImageContainer.$md5string.".png");
-
-                    return $this->dataReturn->errorResponse(400, "Add news failed");
-                }
             } else {
 
+//                $this->binaryImage->removeImage(DefaultParam::NewsImageContainer . $md5string . ".png");
 
-                return $this->dataReturn->errorResponse(400, "Image upload failed");
+                return $this->dataReturn->errorResponse(400, "Add news failed");
             }
+//            } else {
+//
+//
+//                return $this->dataReturn->errorResponse(400, "Image upload failed");
+//            }
         }
 
         return $this->dataReturn->errorResponse(401);
@@ -111,27 +126,30 @@ class NewsController
 
             $bindingModel->setId($theId);
 
-            $news = $this->newsService->getNews($theId);
+//            var_dump($bindingModel->getDate());
+//            $updatedDate = strtotime("+1 day", strtotime($bindingModel->getDate()));
+//            $bindingModel->setDate(date("Y-m-d", $updatedDate));
+//            $news = $this->newsService->getNews($theId);
 
-            $oldImage = $news["image"];
+//            $oldImage = $news["image"];
+//
+//            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/", $bindingModel->getImage()) > 0 ? true : false;
 
-            $isBinaryImage = preg_match("/^data:image\/(png|jpeg);base64,/", $bindingModel->getImage()) > 0 ? true : false;
-
-            if ($isBinaryImage) {
+//            if ($isBinaryImage) {
 
                 $md5string = $this->encryptionService->md5generator(time() . $bindingModel->getTitle());
 
-                $this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png");
-                $bindingModel->setImage($md5string . ".png");
-            } else {
-                $bindingModel->setImage($oldImage);
-            }
+//                $this->binaryImage->createImage($bindingModel->getImage(), DefaultParam::NewsImageContainer, $md5string, "png");
+//                $bindingModel->setImage($md5string . ".png");
+//            } else {
+//                $bindingModel->setImage($oldImage);
+//            }
 
             if ($this->newsService->updateNews($bindingModel)) {
 
-                if ($isBinaryImage) {
-                    $this->binaryImage->removeImage(DefaultParam::NewsImageContainer . $oldImage);
-                }
+//                if ($isBinaryImage) {
+//                    $this->binaryImage->removeImage(DefaultParam::NewsImageContainer . $oldImage);
+//                }
                 $updatedNews = $this->newsService->getNews($bindingModel->getId());
                // $updatedNews["image"] = DefaultParam::ServerRoot . DefaultParam::NewsImageContainer . $updatedNews["image"];
                 return $this->dataReturn->jsonData($updatedNews);
