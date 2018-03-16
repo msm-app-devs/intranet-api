@@ -52,6 +52,7 @@ class Application
 
 
     //DA GO RAZGLEDAM DOPYLNITELNO ZA DA SI IZQSNQ KAK STAVAT NESHTATA TUK
+        
         $refMethod = new \ReflectionMethod($controllerFullQualifiedName,$actionName);
         $parameters = $refMethod->getParameters();
 
