@@ -102,7 +102,6 @@ if ($requestMethod != "OPTIONS") {
 
 }
 
-
 Database::setInstance(
     DbConfig::DB_HOST,
     DbConfig::DB_USER,
