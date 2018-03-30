@@ -16,6 +16,8 @@ class EmpBindingModel
     private $extId;
     private $firstName;
     private $lastName;
+    private $gender;
+    private $company;
     private $position;
     private $team;
     private $dateStart;
@@ -25,8 +27,10 @@ class EmpBindingModel
     private $photo;
     private $education;
     private $expertise;
+    private $skills;
     private $languages;
     private $hobbies;
+    private $pet;
     private $song;
     private $thought;
     private $book;
@@ -373,6 +377,69 @@ class EmpBindingModel
         $this->photo = $photo;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPet()
+    {
+        return $this->pet;
+    }
+
+    /**
+     * @param mixed $pet
+     */
+    public function setPet($pet)
+    {
+        $this->pet = $pet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkills()
+    {
+        return $this->skills;
+    }
+
+    /**
+     * @param mixed $skills
+     */
+    public function setSkills($skills)
+    {
+        $this->skills = $skills;
+    }
 
 
 
