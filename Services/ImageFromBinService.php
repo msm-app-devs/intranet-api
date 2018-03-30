@@ -41,17 +41,19 @@ class ImageFromBinService implements ImageFromBinServiceInterface
 
         $data = $this->decodeBinary($binaryData);
         if (strlen($data) > 0) {
-
             $im = imagecreatefromstring($data);
 
             if ($im !== false) {
-                file_put_contents($path.$imageName.'.'.$imgType, $data);
+                $putcontent = file_put_contents(getcwd()."/".$path.$imageName.".".$imgType, $data);
 
+//                var_dump(is_writeable(getcwd()."/webroot/images/female.jpg"));
+                if (!$putcontent) {
+                    return false;
+                }
                 return true;
             }
-
         }
-        
+
         return false;
     }
 

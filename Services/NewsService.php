@@ -98,8 +98,7 @@ class NewsService implements NewsServiceInterface
                   VALUES (?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
-
-        return $stmt->execute([
+        $arr = [
             $newsBindingModel->getAdminId(),
             "yes",
             $newsBindingModel->getDate(),
@@ -108,7 +107,10 @@ class NewsService implements NewsServiceInterface
             $newsBindingModel->getBody(),
 //            $newsBindingModel->getBody(),
             $uniqueStr
-        ]);
+        ];
+        $result = $stmt->execute($arr);
+
+        return $result;
     }
 
     public function updateNews(NewsBindingModel $bindingModel) : bool
