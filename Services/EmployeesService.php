@@ -31,6 +31,8 @@ class EmployeesService implements EmployeesServiceInterface
                   ext_id AS extId,
                   first_name AS firstName,
                   last_name AS lastName,
+                  gender,
+                  company,
                   position,
                   team,
                   start_date AS dateStart,
@@ -54,6 +56,8 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.ext_id AS extId,
                   employees.first_name AS firstName,
                   employees.last_name AS lastName,
+                  employees.gender,
+                  employees.company,
                   employees.position,
                   employees.team,
                   employees.start_date AS dateStart,
@@ -63,8 +67,10 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.photo, 
                   employees_add_info.education,
                   employees_add_info.expertise,
+                  employees_add_info.skills,
                   employees_add_info.languages,
                   employees_add_info.hobbies,
+                  employees_add_info.pet,
                   employees_add_info.song,
                   employees_add_info.thought,
                   employees_add_info.book,
@@ -78,8 +84,8 @@ class EmployeesService implements EmployeesServiceInterface
         $valuesArr = [$active];
 
         if ($id !== null) {
-             $query .=" AND employees.id = ?";
-             array_push($valuesArr, $id);
+            $query .=" AND employees.id = ?";
+            array_push($valuesArr, $id);
         }
 
         $stmt = $this->db->prepare($query);
@@ -96,6 +102,8 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.ext_id AS extId,
                   employees.first_name AS firstName,
                   employees.last_name AS lastName,
+                  employees.gender,
+                  employees.company,
                   employees.position,
                   employees.team,
                   employees.start_date AS dateStart,
@@ -105,8 +113,10 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.photo,
                   employees_add_info.education,
                   employees_add_info.expertise,
+                  employees_add_info.skills,
                   employees_add_info.languages,
                   employees_add_info.hobbies,
+                  employees_add_info.pet,
                   employees_add_info.song,
                   employees_add_info.thought,
                   employees_add_info.book,
@@ -132,6 +142,8 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.ext_id AS extId,
                   employees.first_name AS firstName,
                   employees.last_name AS lastName,
+                  employees.gender,
+                  employees.company,
                   employees.position,
                   employees.team,
                   employees.start_date AS dateStart,
@@ -141,7 +153,9 @@ class EmployeesService implements EmployeesServiceInterface
                   employees.photo, 
                   employees_add_info.education,
                   employees_add_info.expertise,
+                  employees_add_info.skills,
                   employees_add_info.hobbies,
+                  employees_add_info.pet,
                   employees_add_info.song,
                   employees_add_info.thought,
                   employees_add_info.book,
@@ -160,13 +174,16 @@ class EmployeesService implements EmployeesServiceInterface
         return $result;
     }
 
-        public function addEmp(EmpBindingModel $model, $uniqueStrId)
+    public function addEmp(EmpBindingModel $model, $uniqueStrId)
     {
+
 
         $query = "INSERT INTO 
                   employees (
                   first_name,
                   last_name,
+                  gender,
+                  company,
                   position,
                   team,
                   start_date,
@@ -177,49 +194,30 @@ class EmployeesService implements EmployeesServiceInterface
                   active,
                   unique_str_code
                   )
-                  VALUES (?,?,?,?,?,?,?,?,?,?,?); 
+                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?); 
                   INSERT INTO 
                    employees_add_info (
                             education,
                             expertise,
+                            skills,
                             languages,
                             hobbies,
+                            pet,
                             song,
                             thought,
                             book,
                             skype,
                             email,
                             unique_str_code 
-                   ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                   ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = $this->db->prepare($query);
-//        $arrr = [
-//            $model->getFirstName(),
-//            $model->getLastName(),
-//            $model->getPosition(),
-//            $model->getTeam(),
-//            $model->getDateStart(),
-//            $model->getBirthday(),
-//            $model->getImage(),
-//            $model->getAvatar(),
-//            $model->getPhoto(),
-//            $model->getActive(),
-//            $uniqueStrId,
-//            $model->getEducation(),
-//            $model->getExpertise(),
-//            $model->getLanguages(),
-//            $model->getHobbies(),
-//            $model->getSong(),
-//            $model->getThought(),
-//            $model->getBook(),
-//            $model->getSkype(),
-//            $model->getEmail(),
-//            $uniqueStrId];
-//        var_dump($arrr);
-//        exit;
+
         return $stmt->execute([
             $model->getFirstName(),
             $model->getLastName(),
+            $model->getGender(),
+            $model->getCompany(),
             $model->getPosition(),
             $model->getTeam(),
             $model->getDateStart(),
@@ -231,8 +229,10 @@ class EmployeesService implements EmployeesServiceInterface
             $uniqueStrId,
             $model->getEducation(),
             $model->getExpertise(),
+            $model->getSkills(),
             $model->getLanguages(),
             $model->getHobbies(),
+            $model->getPet(),
             $model->getSong(),
             $model->getThought(),
             $model->getBook(),
@@ -250,6 +250,8 @@ class EmployeesService implements EmployeesServiceInterface
         $updatePropArray = [
             "first_name"=>$empBindingModel->getFirstName(),
             "last_name"=>$empBindingModel->getLastName(),
+            "gender"=>$empBindingModel->getGender(),
+            "company"=>$empBindingModel->getCompany(),
             "position"=>$empBindingModel->getPosition(),
             "team"=>$empBindingModel->getTeam(),
             "start_date"=>$empBindingModel->getDateStart(),
@@ -263,8 +265,10 @@ class EmployeesService implements EmployeesServiceInterface
         $updateAddInfo = [
             "education" => $empBindingModel->getEducation(),
             "expertise" => $empBindingModel->getExpertise(),
+            "skills" => $empBindingModel->getSkills(),
             "languages" => $empBindingModel->getLanguages(),
             "hobbies" => $empBindingModel->getHobbies(),
+            "pet" => $empBindingModel->getPet(),
             "song" => $empBindingModel->getSong(),
             "thought" => $empBindingModel->getThought(),
             "book" => $empBindingModel->getBook(),
